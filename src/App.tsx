@@ -1,11 +1,24 @@
 import { useState } from 'react';
-import { Router, BrowserRouter, Route, Link, Routes } from 'react-router-dom';
+import {
+    Router,
+    BrowserRouter,
+    Route,
+    Link,
+    Routes,
+    redirect,
+} from 'react-router-dom';
 import reactLogo from './assets/react.svg';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import supabase from './supabase/supabase';
+import { getCurrentUserId } from './supabase/auth';
 
 function App() {
+    let xd = false;
+    getCurrentUserId().then((value) => {
+        xd = value !== null;
+    });
+    if (xd) redirect('/login');
     return (
         <div>
             <BrowserRouter>
@@ -68,6 +81,13 @@ function App() {
                     />
                 </Routes>
             </BrowserRouter>
+            <h2>
+                {
+                    getCurrentUserId().then((value) => {
+                        console.log(value);
+                    })[Symbol.toStringTag]
+                }
+            </h2>
         </div>
     );
 }

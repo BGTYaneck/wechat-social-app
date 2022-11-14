@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-type FileTypes =
+export type FileTypes =
     | 'groupAvatar'
     | 'profileAvatar'
     | 'groupBanner'
