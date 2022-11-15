@@ -40,7 +40,7 @@ const Login = () => {
 
     const onSubmit = async (data: LoginInfo) => {
         // @ts-ignore
-        await loginWithEmail(data[0], data[1]);
+        await loginWithEmail(data['email'], data['password']);
     };
 
     const LoginWithGoogleBtn = (e: React.MouseEvent<HTMLElement>) => {

@@ -9,18 +9,11 @@ import {
     Heading,
     AspectRatio,
     Divider,
-    Checkbox,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import {
-    IconLogin,
-    IconUser,
-    IconLock,
-    IconBrandFacebook,
-    IconBrandGoogle,
-} from '@tabler/icons';
+import { IconLogin, IconUser, IconLock } from '@tabler/icons';
 import wechatLogo from '../../assets/logo.png';
 import { registerWithEmail } from '../../supabase/auth';
 
@@ -30,20 +23,21 @@ interface RegisterInfo {
     repeat_password: string;
 }
 
-const onSubmit = async (data: RegisterInfo) => {
-    const navigate = useNavigate();
-    // @ts-ignore
-    if (data[1] == data[2]) {
-        // @ts-ignore
-        await registerWithEmail(data[0], data[1]);
-        navigate('/login');
-    }
-};
-
 const Register = () => {
+    const navigate = useNavigate();
     const { register, handleSubmit } = useForm<RegisterInfo>({
         defaultValues: {},
     });
+
+    const onSubmit = async (data: RegisterInfo) => {
+        // @ts-ignore
+        if (data['password'] == data['repeat_password']) {
+            // @ts-ignore
+            await registerWithEmail(data['email'], data['password']);
+            navigate('/login');
+        }
+    };
+
     return (
         <Center
             h="100vh"
