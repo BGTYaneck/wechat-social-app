@@ -8,10 +8,11 @@ import {
     redirect,
 } from 'react-router-dom';
 import reactLogo from './assets/react.svg';
-import Login from './pages/Auth/Login';
-import Register from './pages/Auth/Register';
 import supabase from './supabase/supabase';
 import { getCurrentUserId } from './supabase/auth';
+import Login from './pages/Auth/components/Login';
+import Register from './pages/Auth/components/Register';
+import AuthPage from './pages/Auth/AuthPage';
 
 function App() {
     let xd = false;
@@ -26,11 +27,11 @@ function App() {
                     {/*Authorization*/}
                     <Route
                         path="/login"
-                        element={<Login />}
+                        element={<AuthPage children={<Login />} />}
                     />
                     <Route
                         path="/register"
-                        element={<Register />}
+                        element={<AuthPage children={<Register />} />}
                     />
                     {/*Users*/}
                     <Route

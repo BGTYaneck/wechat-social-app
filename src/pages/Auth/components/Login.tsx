@@ -23,25 +23,24 @@ import {
     IconBrandFacebook,
     IconBrandGoogle,
 } from '@tabler/icons';
-import wechatLogo from '../../assets/logo.png';
+import wechatLogo from '../../../assets/logo.png';
 import {
     loginWithEmail,
     loginWithFacebook,
     loginWithGoogle,
-} from '../../supabase/auth';
-import background from '../../assets/bg.jpg';
+} from '../../../supabase/auth';
 
 interface LoginInfo {
     email: string;
     password: string;
     rememberMe: boolean;
 }
-const LoginSchema = Yup.object({
+const LoginSchema = Yup.object().shape({
     email: Yup.string()
         .email('Incorrect e-mail address!')
         .required('E-mail cannot be empty'),
     password: Yup.string()
-        .min(3, 'Password too short.')
+        .min(6, 'Password too short.')
         .max(33, 'Password too long')
         .required('Password cannot be empty'),
 });
@@ -49,7 +48,11 @@ const LoginSchema = Yup.object({
 const Login = () => {
     const isOpen = true;
 
-    const { register, handleSubmit } = useForm<LoginInfo>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<LoginInfo>({
         defaultValues: {},
         resolver: yupResolver(LoginSchema),
     });
@@ -68,13 +71,7 @@ const Login = () => {
     };
 
     return (
-        <Center
-            h="100vh"
-            w="100vw"
-            backgroundImage={background}
-            backgroundPosition="center"
-            backgroundSize="cover"
-        >
+        <Center style={{ height: '100vh' }}>
             <ScaleFade
                 initialScale={0.5}
                 in={isOpen}
@@ -116,6 +113,9 @@ const Login = () => {
                             placeholder="your@email.com"
                         />
                     </InputGroup>
+                    <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors.email?.message}
+                    </p>
                     <br />
                     <InputGroup>
                         <InputLeftElement
@@ -132,6 +132,9 @@ const Login = () => {
                             placeholder="●●●●●●●●●●"
                         />
                     </InputGroup>
+                    <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors.password?.message}
+                    </p>
                     <Checkbox
                         style={{ margin: '12px 0px 12px 2px' }}
                         {...register('rememberMe')}

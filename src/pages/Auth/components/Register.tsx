@@ -15,9 +15,10 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { IconLogin, IconUser, IconLock } from '@tabler/icons';
-import wechatLogo from '../../assets/logo.png';
-import { registerWithEmail } from '../../supabase/auth';
-import background from '../../assets/bg.jpg';
+import wechatLogo from '../../../assets/logo.png';
+import { registerWithEmail } from '../../../supabase/auth';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 interface RegisterInfo {
     email: string;
@@ -25,13 +26,34 @@ interface RegisterInfo {
     repeat_password: string;
 }
 
+const RegisterSchema = Yup.object().shape({
+    email: Yup.string()
+        .email('Incorrect e-mail address!')
+        .required('E-mail cannot be empty'),
+    password: Yup.string()
+        .min(6, 'Password too short.')
+        .max(33, 'Password too long')
+        .required('Password cannot be empty'),
+    repeat_password: Yup.string()
+        .min(6, 'Password too short.')
+        .max(33, 'Password too long')
+        .required('Password cannot be empty')
+        .oneOf([Yup.ref('password'), null], 'Passwords do not match'),
+});
+
 const Register = () => {
-    const navigate = useNavigate();
-    const { register, handleSubmit } = useForm<RegisterInfo>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<RegisterInfo>({
         defaultValues: {},
+        resolver: yupResolver(RegisterSchema),
     });
+    const navigate = useNavigate();
 
     const onSubmit = async (data: RegisterInfo) => {
+        console.log(data);
         // @ts-ignore
         if (data['password'] == data['repeat_password']) {
             // @ts-ignore
@@ -43,17 +65,11 @@ const Register = () => {
     const isOpen = true;
 
     return (
-        <Center
-            h="100vh"
-            w="100vw"
-            backgroundImage={background}
-            backgroundPosition="center"
-            backgroundSize="cover"
+        <ScaleFade
+            initialScale={0.5}
+            in={isOpen}
         >
-            <ScaleFade
-                initialScale={0.5}
-                in={isOpen}
-            >
+            <Center style={{ height: '100vh' }}>
                 <form
                     style={{
                         backgroundColor: 'white',
@@ -91,6 +107,9 @@ const Register = () => {
                             placeholder="example@example.com"
                         />
                     </InputGroup>
+                    <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors.email?.message}
+                    </p>
                     <br />
                     <InputGroup>
                         <InputLeftElement
@@ -107,6 +126,9 @@ const Register = () => {
                             placeholder="●●●●●●●●●●"
                         />
                     </InputGroup>
+                    <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors.password?.message}
+                    </p>
                     <InputGroup style={{ margin: '20px 0 0 0' }}>
                         <InputLeftElement
                             pointerEvents="none"
@@ -122,6 +144,9 @@ const Register = () => {
                             placeholder="●●●●●●●●●●"
                         />
                     </InputGroup>
+                    <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors.repeat_password?.message}
+                    </p>
                     <Divider style={{ margin: '20px 0px 20px 0px' }} />
 
                     <Button
@@ -159,8 +184,8 @@ const Register = () => {
                         </Link>
                     </Center>
                 </form>
-            </ScaleFade>
-        </Center>
+            </Center>
+        </ScaleFade>
     );
 };
 
