@@ -9,34 +9,24 @@ import {
     Heading,
     AspectRatio,
     Divider,
-    Checkbox,
     ScaleFade,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import {
-    IconLogin,
-    IconUser,
-    IconLock,
-    IconBrandFacebook,
-    IconBrandGoogle,
-} from '@tabler/icons';
-import wechatLogo from '../../assets/logo.png';
-import {
-    loginWithEmail,
-    loginWithFacebook,
-    loginWithGoogle,
-} from '../../supabase/auth';
-import background from '../../assets/bg.jpg';
+import { useNavigate } from 'react-router-dom';
+import { IconLogin, IconUser, IconLock } from '@tabler/icons';
+import wechatLogo from '../../../assets/logo.png';
+import { registerWithEmail } from '../../../supabase/auth';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-interface LoginInfo {
+interface RegisterInfo {
     email: string;
     password: string;
-    rememberMe: boolean;
+    repeat_password: string;
 }
-const LoginSchema = Yup.object({
+
+const RegisterSchema = Yup.object().shape({
     email: Yup.string()
         .email('Incorrect e-mail address!')
         .required('E-mail cannot be empty'),
@@ -44,41 +34,42 @@ const LoginSchema = Yup.object({
         .min(3, 'Password too short.')
         .max(33, 'Password too long')
         .required('Password cannot be empty'),
+    repeat_password: Yup.string()
+        .min(3, 'Password too short.')
+        .max(33, 'Password too long')
+        .required('Password cannot be empty')
+        .oneOf([Yup.ref('password'), null], 'Passwords do not match'),
 });
 
-const Login = () => {
+const Register = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<RegisterInfo>({
+        defaultValues: {},
+        resolver: yupResolver(RegisterSchema),
+    });
+    const navigate = useNavigate();
+
+    const onSubmit = async (data: RegisterInfo) => {
+        console.log(data);
+        // @ts-ignore
+        if (data['password'] == data['repeat_password']) {
+            // @ts-ignore
+            await registerWithEmail(data['email'], data['password']);
+            navigate('/login');
+        }
+    };
+
     const isOpen = true;
 
-    const { register, handleSubmit } = useForm<LoginInfo>({
-        defaultValues: {},
-        resolver: yupResolver(LoginSchema),
-    });
-
-    const onSubmit = async (data: LoginInfo) => {
-        // @ts-ignore
-        await loginWithEmail(data['email'], data['password']);
-    };
-
-    const LoginWithGoogleBtn = (e: React.MouseEvent<HTMLElement>) => {
-        loginWithGoogle();
-    };
-
-    const LoginWithFacebookBtn = (e: React.MouseEvent<HTMLElement>) => {
-        loginWithFacebook();
-    };
-
     return (
-        <Center
-            h="100vh"
-            w="100vw"
-            backgroundImage={background}
-            backgroundPosition="center"
-            backgroundSize="cover"
+        <ScaleFade
+            initialScale={0.5}
+            in={isOpen}
         >
-            <ScaleFade
-                initialScale={0.5}
-                in={isOpen}
-            >
+            <Center style={{ height: '100vh' }}>
                 <form
                     style={{
                         backgroundColor: 'white',
@@ -113,9 +104,12 @@ const Login = () => {
                             errorBorderColor="red.500"
                             focusBorderColor="red.300"
                             {...register('email')}
-                            placeholder="your@email.com"
+                            placeholder="example@example.com"
                         />
                     </InputGroup>
+                    <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors.email?.message}
+                    </p>
                     <br />
                     <InputGroup>
                         <InputLeftElement
@@ -132,15 +126,29 @@ const Login = () => {
                             placeholder="●●●●●●●●●●"
                         />
                     </InputGroup>
-                    <Checkbox
-                        style={{ margin: '12px 0px 12px 2px' }}
-                        {...register('rememberMe')}
-                        defaultChecked
-                        colorScheme="red"
-                    >
-                        Remember me
-                    </Checkbox>
-                    <br />
+                    <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors.password?.message}
+                    </p>
+                    <InputGroup style={{ margin: '20px 0 0 0' }}>
+                        <InputLeftElement
+                            pointerEvents="none"
+                            color="gray.300"
+                            fontSize="1.2em"
+                            children={<IconLock />}
+                        />
+                        <Input
+                            type="password"
+                            errorBorderColor="red.500"
+                            focusBorderColor="red.300"
+                            {...register('repeat_password')}
+                            placeholder="●●●●●●●●●●"
+                        />
+                    </InputGroup>
+                    <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors.repeat_password?.message}
+                    </p>
+                    <Divider style={{ margin: '20px 0px 20px 0px' }} />
+
                     <Button
                         leftIcon={<IconLogin />}
                         colorScheme="red"
@@ -148,30 +156,7 @@ const Login = () => {
                         width="xs"
                         type="submit"
                     >
-                        Log in to wechat
-                    </Button>
-                    <Divider style={{ margin: '20px 0px 20px 0px' }} />
-                    <Center>
-                        <Button
-                            style={{ margin: '0 0 10px 0' }}
-                            leftIcon={<IconBrandGoogle />}
-                            colorScheme="blackAlpha"
-                            variant="outline"
-                            borderRadius="xl"
-                            width="xs"
-                            onClick={LoginWithGoogleBtn}
-                        >
-                            Log in with Google
-                        </Button>
-                    </Center>
-                    <Button
-                        leftIcon={<IconBrandFacebook />}
-                        colorScheme="facebook"
-                        borderRadius="xl"
-                        width="xs"
-                        onClick={LoginWithFacebookBtn}
-                    >
-                        Log in with Facebook
+                        Register to wechat
                     </Button>
                     <Center>
                         <p
@@ -181,11 +166,11 @@ const Login = () => {
                                 color: 'hex(#d1d5db)',
                             }}
                         >
-                            Don't have an account?
+                            Already have an account?
                         </p>
                     </Center>
                     <Center>
-                        <Link to={'/register'}>
+                        <Link to={'/login'}>
                             <p
                                 style={{
                                     fontSize: '12px',
@@ -194,13 +179,14 @@ const Login = () => {
                                     cursor: 'pointer',
                                 }}
                             >
-                                Register now!
+                                Log in now!
                             </p>
                         </Link>
                     </Center>
                 </form>
-            </ScaleFade>
-        </Center>
+            </Center>
+        </ScaleFade>
     );
 };
-export default Login;
+
+export default Register;

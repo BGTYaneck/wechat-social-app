@@ -9,47 +9,69 @@ import {
     Heading,
     AspectRatio,
     Divider,
+    Checkbox,
     ScaleFade,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { IconLogin, IconUser, IconLock } from '@tabler/icons';
-import wechatLogo from '../../assets/logo.png';
-import { registerWithEmail } from '../../supabase/auth';
-import background from '../../assets/bg.jpg';
+import {
+    IconLogin,
+    IconUser,
+    IconLock,
+    IconBrandFacebook,
+    IconBrandGoogle,
+} from '@tabler/icons';
+import wechatLogo from '../../../assets/logo.png';
+import {
+    loginWithEmail,
+    loginWithFacebook,
+    loginWithGoogle,
+} from '../../../supabase/auth';
 
-interface RegisterInfo {
+interface LoginInfo {
     email: string;
     password: string;
-    repeat_password: string;
+    rememberMe: boolean;
 }
+const LoginSchema = Yup.object().shape({
+    email: Yup.string()
+        .email('Incorrect e-mail address!')
+        .required('E-mail cannot be empty'),
+    password: Yup.string()
+        .min(3, 'Password too short.')
+        .max(33, 'Password too long')
+        .required('Password cannot be empty'),
+});
 
-const Register = () => {
-    const navigate = useNavigate();
-    const { register, handleSubmit } = useForm<RegisterInfo>({
-        defaultValues: {},
-    });
-
-    const onSubmit = async (data: RegisterInfo) => {
-        // @ts-ignore
-        if (data['password'] == data['repeat_password']) {
-            // @ts-ignore
-            await registerWithEmail(data['email'], data['password']);
-            navigate('/login');
-        }
-    };
-
+const Login = () => {
     const isOpen = true;
 
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<LoginInfo>({
+        defaultValues: {},
+        resolver: yupResolver(LoginSchema),
+    });
+
+    const onSubmit = async (data: LoginInfo) => {
+        // @ts-ignore
+        await loginWithEmail(data['email'], data['password']);
+    };
+
+    const LoginWithGoogleBtn = (e: React.MouseEvent<HTMLElement>) => {
+        loginWithGoogle();
+    };
+
+    const LoginWithFacebookBtn = (e: React.MouseEvent<HTMLElement>) => {
+        loginWithFacebook();
+    };
+
     return (
-        <Center
-            h="100vh"
-            w="100vw"
-            backgroundImage={background}
-            backgroundPosition="center"
-            backgroundSize="cover"
-        >
+        <Center style={{ height: '100vh' }}>
             <ScaleFade
                 initialScale={0.5}
                 in={isOpen}
@@ -88,9 +110,12 @@ const Register = () => {
                             errorBorderColor="red.500"
                             focusBorderColor="red.300"
                             {...register('email')}
-                            placeholder="example@example.com"
+                            placeholder="your@email.com"
                         />
                     </InputGroup>
+                    <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors.email?.message}
+                    </p>
                     <br />
                     <InputGroup>
                         <InputLeftElement
@@ -107,23 +132,18 @@ const Register = () => {
                             placeholder="●●●●●●●●●●"
                         />
                     </InputGroup>
-                    <InputGroup style={{ margin: '20px 0 0 0' }}>
-                        <InputLeftElement
-                            pointerEvents="none"
-                            color="gray.300"
-                            fontSize="1.2em"
-                            children={<IconLock />}
-                        />
-                        <Input
-                            type="password"
-                            errorBorderColor="red.500"
-                            focusBorderColor="red.300"
-                            {...register('repeat_password')}
-                            placeholder="●●●●●●●●●●"
-                        />
-                    </InputGroup>
-                    <Divider style={{ margin: '20px 0px 20px 0px' }} />
-
+                    <p style={{ color: 'red', fontSize: '12px' }}>
+                        {errors.password?.message}
+                    </p>
+                    <Checkbox
+                        style={{ margin: '12px 0px 12px 2px' }}
+                        {...register('rememberMe')}
+                        defaultChecked
+                        colorScheme="red"
+                    >
+                        Remember me
+                    </Checkbox>
+                    <br />
                     <Button
                         leftIcon={<IconLogin />}
                         colorScheme="red"
@@ -131,7 +151,30 @@ const Register = () => {
                         width="xs"
                         type="submit"
                     >
-                        Register to wechat
+                        Log in to wechat
+                    </Button>
+                    <Divider style={{ margin: '20px 0px 20px 0px' }} />
+                    <Center>
+                        <Button
+                            style={{ margin: '0 0 10px 0' }}
+                            leftIcon={<IconBrandGoogle />}
+                            colorScheme="blackAlpha"
+                            variant="outline"
+                            borderRadius="xl"
+                            width="xs"
+                            onClick={LoginWithGoogleBtn}
+                        >
+                            Log in with Google
+                        </Button>
+                    </Center>
+                    <Button
+                        leftIcon={<IconBrandFacebook />}
+                        colorScheme="facebook"
+                        borderRadius="xl"
+                        width="xs"
+                        onClick={LoginWithFacebookBtn}
+                    >
+                        Log in with Facebook
                     </Button>
                     <Center>
                         <p
@@ -141,11 +184,11 @@ const Register = () => {
                                 color: 'hex(#d1d5db)',
                             }}
                         >
-                            Already have an account?
+                            Don't have an account?
                         </p>
                     </Center>
                     <Center>
-                        <Link to={'/login'}>
+                        <Link to={'/register'}>
                             <p
                                 style={{
                                     fontSize: '12px',
@@ -154,7 +197,7 @@ const Register = () => {
                                     cursor: 'pointer',
                                 }}
                             >
-                                Log in now!
+                                Register now!
                             </p>
                         </Link>
                     </Center>
@@ -163,5 +206,4 @@ const Register = () => {
         </Center>
     );
 };
-
-export default Register;
+export default Login;
