@@ -31,11 +31,11 @@ const RegisterSchema = Yup.object().shape({
         .email('Incorrect e-mail address!')
         .required('E-mail cannot be empty'),
     password: Yup.string()
-        .min(6, 'Password too short.')
+        .min(3, 'Password too short.')
         .max(33, 'Password too long')
         .required('Password cannot be empty'),
     repeat_password: Yup.string()
-        .min(6, 'Password too short.')
+        .min(3, 'Password too short.')
         .max(33, 'Password too long')
         .required('Password cannot be empty')
         .oneOf([Yup.ref('password'), null], 'Passwords do not match'),
