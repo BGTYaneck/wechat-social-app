@@ -81,13 +81,6 @@ function App() {
                     />
                 </Routes>
             </BrowserRouter>
-            <h2>
-                {
-                    getCurrentUserId().then((value) => {
-                        console.log(value);
-                    })[Symbol.toStringTag]
-                }
-            </h2>
         </div>
     );
 }
