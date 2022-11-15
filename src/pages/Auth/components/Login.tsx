@@ -40,7 +40,7 @@ const LoginSchema = Yup.object().shape({
         .email('Incorrect e-mail address!')
         .required('E-mail cannot be empty'),
     password: Yup.string()
-        .min(3, 'Password too short.')
+        .min(6, 'Password too short.')
         .max(33, 'Password too long')
         .required('Password cannot be empty'),
 });
