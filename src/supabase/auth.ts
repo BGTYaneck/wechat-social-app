@@ -36,6 +36,7 @@ export async function logOut() {
 
 export async function getCurrentUserId(): Promise<string | null> {
     const { data, error } = await supabase.auth.getUser();
+    if (error?.message === 'invalid claim: missing sub claim') return null;
     if (error) throw error;
     if (data.user?.id) {
         return data.user.id;

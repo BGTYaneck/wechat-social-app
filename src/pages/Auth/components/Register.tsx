@@ -20,7 +20,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { IconLogin, IconUser, IconLock } from '@tabler/icons';
 import wechatLogo from '../../../assets/logo.png';
-import { registerWithEmail } from '../../../supabase/auth';
+import { getCurrentUserId, registerWithEmail } from '../../../supabase/auth';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
@@ -51,7 +51,6 @@ const RegisterSchema = Yup.object().shape({
 
 const Register = () => {
     const [Error, setError] = useState('');
-
     const {
         register,
         handleSubmit,
@@ -62,6 +61,9 @@ const Register = () => {
     });
     const navigate = useNavigate();
 
+    getCurrentUserId().then((value) => {
+        if (value) navigate('/');
+    });
     const onSubmit = async (data: RegisterInfo) => {
         // @ts-ignore
         if (data['password'] == data['repeat_password']) {

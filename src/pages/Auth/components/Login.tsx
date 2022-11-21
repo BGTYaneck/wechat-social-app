@@ -17,7 +17,7 @@ import {
     AlertDescription,
     Alert,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
@@ -32,6 +32,7 @@ import {
 import wechatLogo from '../../../assets/logo.png';
 import { FcGoogle } from 'react-icons/fc';
 import {
+    getCurrentUserId,
     loginWithEmail,
     loginWithFacebook,
     loginWithGoogle,
@@ -55,7 +56,10 @@ const LoginSchema = Yup.object().shape({
 const Login = () => {
     const [Error, setError] = useState('');
     const isOpen = true;
-
+    const navigate = useNavigate();
+    getCurrentUserId().then((value) => {
+        if (value) navigate('/');
+    });
     const {
         register,
         handleSubmit,
