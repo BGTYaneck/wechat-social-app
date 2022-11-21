@@ -7,14 +7,6 @@ type Props = {
     children: React.ReactNode;
 };
 const AuthPage = (props: Props) => {
-    return (
-        <Center
-            backgroundImage={background}
-            backgroundPosition="center"
-            backgroundSize="cover"
-        >
-            {props.children}
-        </Center>
-    );
+    return <Center>{props.children}</Center>;
 };
 export default AuthPage;
