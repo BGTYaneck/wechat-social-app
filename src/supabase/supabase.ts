@@ -43,4 +43,10 @@ export function getBase64Image(img: File) {
     return dataUrl;
 }
 
+export function base64ToImage(value: string): HTMLImageElement {
+    var image = new Image();
+    image.src = value;
+    return image;
+}
+
 export default supabase;

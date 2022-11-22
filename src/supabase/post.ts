@@ -3,7 +3,7 @@ import { getCurrentUserId } from './auth';
 
 export async function createPost(message: string, file?: File, group?: string) {
     if (file) {
-        message += '微信' + getBase64Image(file);
+        message += '微信\ufff1' + getBase64Image(file);
     }
     const { error } = await supabase.from('posts').insert({
         author: await supabase.auth.getUser(),
@@ -31,6 +31,6 @@ export async function likePost(id: string) {
             .delete()
             .eq('post_id', id)
             .eq('user_id', await getCurrentUserId());
-        if (response.error) throw response.error
+        if (response.error) throw response.error;
     }
 }

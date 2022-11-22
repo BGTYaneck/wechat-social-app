@@ -1,25 +1,12 @@
 import { useState } from 'react';
-import {
-    Router,
-    BrowserRouter,
-    Route,
-    Link,
-    Routes,
-    redirect,
-} from 'react-router-dom';
+import { Router, BrowserRouter, Route, Link, Routes } from 'react-router-dom';
 import reactLogo from './assets/react.svg';
 import supabase from './supabase/supabase';
-import { getCurrentUserId } from './supabase/auth';
 import Login from './pages/Auth/components/Login';
 import Register from './pages/Auth/components/Register';
 import AuthPage from './pages/Auth/AuthPage';
 
 function App() {
-    let xd = false;
-    getCurrentUserId().then((value) => {
-        xd = value !== null;
-    });
-    if (xd) redirect('/login');
     return (
         <div>
             <BrowserRouter>
