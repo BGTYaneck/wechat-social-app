@@ -82,10 +82,6 @@ const Login = () => {
         loginWithGoogle();
     };
 
-    const LoginWithFacebookBtn = (e: React.MouseEvent<HTMLElement>) => {
-        loginWithFacebook();
-    };
-
     return (
         <>
             <Alert
@@ -93,6 +89,7 @@ const Login = () => {
                 style={{
                     display: Error != '' ? 'flex' : 'none',
                     flexDirection: 'column',
+                    marginTop: '1rem',
                     position: 'fixed',
                     top: '0',
                     textAlign: 'center',
@@ -113,7 +110,7 @@ const Login = () => {
                     style={{
                         backgroundColor: 'white',
                         borderRadius: '8%',
-                        marginTop: '5rem',
+                        marginTop: '7.6rem',
                     }}
                     onSubmit={handleSubmit(onSubmit)}
                 >
@@ -227,15 +224,6 @@ const Login = () => {
                             Log in using Google
                         </Button>
                     </Center>
-                    <Button
-                        leftIcon={<IconBrandFacebook />}
-                        colorScheme="facebook"
-                        borderRadius="xl"
-                        width="xs"
-                        onClick={LoginWithFacebookBtn}
-                    >
-                        Log in using Facebook
-                    </Button>
                     <Center>
                         <p
                             style={{

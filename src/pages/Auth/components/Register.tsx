@@ -64,6 +64,7 @@ const Register = () => {
     getCurrentUserId().then((value) => {
         if (value) navigate('/');
     });
+
     const onSubmit = async (data: RegisterInfo) => {
         // @ts-ignore
         if (data['password'] == data['repeat_password']) {

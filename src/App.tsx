@@ -5,6 +5,7 @@ import supabase from './supabase/supabase';
 import Login from './pages/Auth/components/Login';
 import Register from './pages/Auth/components/Register';
 import AuthPage from './pages/Auth/AuthPage';
+import Homepage from './pages/Homepage/Homepage';
 
 function App() {
     return (
@@ -20,6 +21,10 @@ function App() {
                         path="/register"
                         element={<AuthPage children={<Register />} />}
                     />
+                    <Route
+                        path="/"
+                        element={<Homepage />}
+                    />
                     {/*Users*/}
                     <Route
                         path="/user/:id/profile"
@@ -34,7 +39,7 @@ function App() {
                         element={<App />}
                     />
                     <Route
-                        path="/user/:id/home"
+                        path="/:id/home"
                         element={<App />}
                     />
                     {/*Groups*/}
