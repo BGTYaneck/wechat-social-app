@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 
-const Homepage = () => {
+const CompleteProfile = () => {
     return (
         <>
             <Navbar />
@@ -9,4 +9,4 @@ const Homepage = () => {
     );
 };
 
-export default Homepage;
+export default CompleteProfile;

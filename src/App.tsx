@@ -6,6 +6,7 @@ import Login from './pages/Auth/components/Login';
 import Register from './pages/Auth/components/Register';
 import AuthPage from './pages/Auth/AuthPage';
 import Homepage from './pages/Homepage/Homepage';
+import CompleteProfile from './pages/CompleteProfile/CompleteProfile';
 
 function App() {
     return (
@@ -20,6 +21,10 @@ function App() {
                     <Route
                         path="/register"
                         element={<AuthPage children={<Register />} />}
+                    />
+                    <Route
+                        path="/complete-profile"
+                        element={<CompleteProfile />}
                     />
                     <Route
                         path="/"

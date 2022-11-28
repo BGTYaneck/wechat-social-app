@@ -11,7 +11,6 @@ import {
     Divider,
     Checkbox,
     ScaleFade,
-    Text,
     AlertIcon,
     AlertTitle,
     AlertDescription,
@@ -21,20 +20,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import {
-    IconLogin,
-    IconUser,
-    IconLock,
-    IconBrandFacebook,
-    IconBrandGoogle,
-    IconBrandChrome,
-} from '@tabler/icons';
+import { IconLogin, IconUser, IconLock } from '@tabler/icons';
 import wechatLogo from '../../../assets/logo.png';
 import { FcGoogle } from 'react-icons/fc';
 import {
     getCurrentUserId,
     loginWithEmail,
-    loginWithFacebook,
     loginWithGoogle,
 } from '../../../supabase/auth';
 
@@ -206,14 +197,12 @@ const Login = () => {
                                 boxShadow: '2px 2px 2px 1px rgba(0, 0, 0, 0.2)',
                             }}
                             leftIcon={
-                                <p style={{ width: '28px', height: '28px' }}>
-                                    <FcGoogle
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                        }}
-                                    />
-                                </p>
+                                <FcGoogle
+                                    style={{
+                                        width: '28px',
+                                        height: '28px',
+                                    }}
+                                />
                             }
                             colorScheme="alphaBlack"
                             variant="ghost"
