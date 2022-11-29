@@ -29,3 +29,11 @@ export async function pinPost(id: string) {
         .eq('id', await getCurrentUserId());
     if (response.error) throw response.error;
 }
+
+export async function getProfile(id?:string|null) {
+    if (id === undefined) id = await getCurrentUserId();
+    if (id === null) return;
+    const {data, error} = await supabase.from('profiles').select().eq('id',id)
+    if (error) throw error
+    return data;
+}
