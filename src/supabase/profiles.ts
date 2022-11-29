@@ -33,7 +33,15 @@ export async function pinPost(id: string) {
 export async function getProfile(id?:string|null) {
     if (id === undefined) id = await getCurrentUserId();
     if (id === null) return;
-    const {data, error} = await supabase.from('profiles').select().eq('id',id)
+    const {data, error} = await supabase.from('profiles').select().eq('id',id).single()
     if (error) throw error
     return data;
+}
+
+export async function getAvatar(id?:string|null) {
+    if (id === undefined) id = await getCurrentUserId();
+    if (id === null) return;
+    const {data, error} = await supabase.storage.from('public').download(`avatar/profile/${id}`)
+    if (error) throw error
+    return data
 }

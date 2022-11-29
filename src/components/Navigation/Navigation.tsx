@@ -1,5 +1,5 @@
 import React from 'react';
-import { logOut } from '../../supabase/auth';
+import { getCurrentUserId, logOut } from '../../supabase/auth';
 import {
     Center,
     Button,
@@ -38,6 +38,8 @@ import {
 import wechatLogo from '../../assets/logo.png';
 import { useDisclosure } from '@chakra-ui/react';
 import '../../index.css';
+import { getFriendsList } from '../../supabase/friends';
+import { getAvatar, getProfile } from '../../supabase/profiles';
 
 const Navigation = () => {
     const {
@@ -56,6 +58,17 @@ const Navigation = () => {
             window.location.href = '/login';
         });
     };
+
+    const getFriends = (): any[] => {
+        let list;
+        getFriendsList().then(value => {
+            list = value;
+        })
+        if (list === undefined) return [];
+        return list;
+    }
+    let userId: string|null;
+    getCurrentUserId().then(value=>userId=value)
 
     return (
         <>
@@ -84,7 +97,18 @@ const Navigation = () => {
                     </DrawerHeader>
                     <Divider />
 
-                    <DrawerBody>{/*Znajomi*/}</DrawerBody>
+                    <DrawerBody>{getFriends().length == 0 ? <p>You do not currently have any friends.</p> : getFriends().map(({sender,recipient,accepted,created_at})=> {
+                        let friendId = sender === userId ? recipient : sender;
+                        let friendName;
+                        getProfile(friendId).then(value => {
+                            friendName = value.name;
+                        })
+                        let friendAvatar;
+                        getAvatar(friendId).then(value=>{
+                            friendAvatar = value;
+                        })
+                        return <><img src={friendAvatar}/>{friendName}</>
+                    })}</DrawerBody>
                     <DrawerFooter></DrawerFooter>
                 </DrawerContent>
             </Drawer>
