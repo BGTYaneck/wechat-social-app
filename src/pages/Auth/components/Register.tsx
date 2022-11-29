@@ -186,8 +186,9 @@ const Register = () => {
                             borderRadius="xl"
                             width="xs"
                             type="submit"
+                            bgGradient="linear(to-tr, red.400, red.500, red.600)"
                         >
-                            Register to wechat
+                            Register to WeChat
                         </Button>
                         <Center>
                             <p

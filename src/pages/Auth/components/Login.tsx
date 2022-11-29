@@ -167,8 +167,9 @@ const Login = () => {
                             borderRadius="xl"
                             width="xs"
                             type="submit"
+                            bgGradient="linear(to-tr, red.400, red.500, red.600)"
                         >
-                            Log in to wechat
+                            Log in to WeChat
                         </Button>
                         <Divider
                             style={{
