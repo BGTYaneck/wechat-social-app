@@ -10,10 +10,7 @@ import {
     AspectRatio,
     Divider,
     ScaleFade,
-    Alert,
-    AlertIcon,
-    AlertTitle,
-    AlertDescription,
+    useToast,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -23,7 +20,6 @@ import wechatLogo from '../../../assets/logo.png';
 import { getCurrentUserId, registerWithEmail } from '../../../supabase/auth';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
 
 interface RegisterInfo {
     email: string;
@@ -50,7 +46,10 @@ const RegisterSchema = Yup.object().shape({
 });
 
 const Register = () => {
-    const [Error, setError] = useState('');
+    const isOpen = true;
+    const navigate = useNavigate();
+    const toast = useToast();
+
     const {
         register,
         handleSubmit,
@@ -59,7 +58,6 @@ const Register = () => {
         defaultValues: {},
         resolver: yupResolver(RegisterSchema),
     });
-    const navigate = useNavigate();
 
     getCurrentUserId().then((value) => {
         if (value) navigate('/');
@@ -72,47 +70,28 @@ const Register = () => {
             try {
                 await registerWithEmail(data['email'], data['password']);
             } catch (e: any) {
-                setError(e.message);
+                toast({
+                    title: 'Error',
+                    description: e.message.toString(),
+                    status: 'error',
+                    variant: 'subtle',
+                    isClosable: true,
+                    duration: 5000,
+                });
                 return;
             }
         }
-        navigate('/login');
+        navigate('/complete-profile');
     };
-
-    const isOpen = true;
 
     return (
         <>
-            <Alert
-                status="error"
-                style={{
-                    display: Error != '' ? 'flex' : 'none',
-                    flexDirection: 'column',
-                    marginTop: '1rem',
-                    position: 'fixed',
-                    top: '0',
-                    textAlign: 'center',
-                    width: '100vw',
-                }}
-            >
-                <AlertIcon />
-                <AlertTitle>
-                    We had a problem processing your request!
-                </AlertTitle>
-                <AlertDescription>{Error}</AlertDescription>
-            </Alert>
             <ScaleFade
                 initialScale={0.5}
                 in={isOpen}
             >
                 <Center style={{ height: '100vh' }}>
-                    <form
-                        style={{
-                            backgroundColor: 'white',
-                            padding: '40px',
-                        }}
-                        onSubmit={handleSubmit(onSubmit)}
-                    >
+                    <form onSubmit={handleSubmit(onSubmit)}>
                         <AspectRatio
                             maxW="400px"
                             ratio={2 / 1}

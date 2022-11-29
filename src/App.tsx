@@ -1,12 +1,11 @@
-import { useState } from 'react';
-import { Router, BrowserRouter, Route, Link, Routes } from 'react-router-dom';
-import reactLogo from './assets/react.svg';
-import supabase from './supabase/supabase';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/Auth/components/Login';
 import Register from './pages/Auth/components/Register';
 import AuthPage from './pages/Auth/AuthPage';
 import Homepage from './pages/Homepage/Homepage';
 import CompleteProfile from './pages/CompleteProfile/CompleteProfile';
+import Error from './pages/Error';
+import Success from './pages/CompleteProfile/components/Success';
 
 function App() {
     return (
@@ -22,60 +21,24 @@ function App() {
                         path="/register"
                         element={<AuthPage children={<Register />} />}
                     />
+                    {/*Account completion*/}
                     <Route
                         path="/complete-profile"
                         element={<CompleteProfile />}
                     />
                     <Route
+                        path="/success"
+                        element={<Success />}
+                    />
+                    {/*Main page*/}
+                    <Route
                         path="/"
                         element={<Homepage />}
                     />
-                    {/*Users*/}
+                    {/*Not found*/}
                     <Route
-                        path="/user/:id/profile"
-                        element={<App />}
-                    />
-                    <Route
-                        path="/user/:id/my-profile"
-                        element={<App />}
-                    />
-                    <Route
-                        path="/user/:id/my-profile/edit"
-                        element={<App />}
-                    />
-                    <Route
-                        path="/:id/home"
-                        element={<App />}
-                    />
-                    {/*Groups*/}
-                    <Route
-                        path="/group/:id/"
-                        element={<App />}
-                    />
-                    <Route
-                        path="/group/:id/edit"
-                        element={<App />}
-                    />
-                    <Route
-                        path="/group/create"
-                        element={<App />}
-                    />
-                    <Route
-                        path="/group/:id"
-                        element={<App />}
-                    />
-                    <Route
-                        path="/group/:id/edit"
-                        element={<App />}
-                    />
-                    {/*Chats*/}
-                    <Route
-                        path="/group/:id/chat"
-                        element={<App />}
-                    />
-                    <Route
-                        path="/user/:id/chats"
-                        element={<App />}
+                        path="/error"
+                        element={<Error />}
                     />
                 </Routes>
             </BrowserRouter>
