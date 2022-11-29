@@ -12,6 +12,22 @@ import {
     DrawerContent,
     DrawerCloseButton,
     Divider,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    MenuItemOption,
+    MenuGroup,
+    MenuOptionGroup,
+    MenuDivider,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    Tooltip,
 } from '@chakra-ui/react';
 import {
     GiExitDoor,
@@ -21,9 +37,19 @@ import {
 } from 'react-icons/all';
 import wechatLogo from '../../assets/logo.png';
 import { useDisclosure } from '@chakra-ui/react';
+import '../../index.css';
 
-const Navbar = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+const Navigation = () => {
+    const {
+        isOpen: isOpenModal,
+        onOpen: onOpenModal,
+        onClose: onCloseModal,
+    } = useDisclosure();
+    const {
+        isOpen: isOpenDrawer,
+        onOpen: onOpenDrawer,
+        onClose: onCloseDrawer,
+    } = useDisclosure();
 
     const LogOutBtn = (e: React.MouseEvent<HTMLElement>) => {
         logOut().then((value) => {
@@ -34,9 +60,9 @@ const Navbar = () => {
     return (
         <>
             <Drawer
-                isOpen={isOpen}
+                isOpen={isOpenDrawer}
                 placement="right"
-                onClose={onClose}
+                onClose={onCloseDrawer}
             >
                 <DrawerOverlay />
                 <DrawerContent>
@@ -58,10 +84,31 @@ const Navbar = () => {
                     </DrawerHeader>
                     <Divider />
 
-                    <DrawerBody></DrawerBody>
+                    <DrawerBody>{/*Znajomi*/}</DrawerBody>
                     <DrawerFooter></DrawerFooter>
                 </DrawerContent>
             </Drawer>
+
+            <Modal
+                isOpen={isOpenModal}
+                onClose={onCloseModal}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Create a post</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody></ModalBody>
+
+                    <ModalFooter>
+                        <Button
+                            variant="outline"
+                            colorScheme="red"
+                        >
+                            Create post
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
             <div
                 style={{
                     position: 'fixed',
@@ -88,28 +135,45 @@ const Navbar = () => {
                     />
                 </Center>
                 <Center style={{ marginLeft: '20px', gap: '10px' }}>
-                    <Button
-                        size="lg"
-                        variant="outline"
-                        style={{ borderRadius: '50%', padding: '0' }}
-                    >
-                        <GiFeather />
-                    </Button>
-                    <Button
-                        size="lg"
-                        variant="outline"
-                        style={{ borderRadius: '50%', padding: '0' }}
-                    >
-                        <GiRingingBell />
-                    </Button>
-                    <Button
-                        size="lg"
-                        variant="outline"
-                        style={{ borderRadius: '50%', padding: '0' }}
-                        onClick={onOpen}
-                    >
-                        <GiPsychicWaves />
-                    </Button>
+                    <Tooltip label="Create a post">
+                        <Button
+                            size="lg"
+                            variant="outline"
+                            style={{ borderRadius: '50%', padding: '0' }}
+                            onClick={onOpenModal}
+                        >
+                            <GiFeather />
+                        </Button>
+                    </Tooltip>
+                    <Menu>
+                        <Tooltip label="Notifications">
+                            <MenuButton
+                                className="cantDoHoverInline"
+                                style={{
+                                    borderRadius: '50%',
+                                    border: '1px solid #e2e8f0',
+                                    padding: '14px',
+                                }}
+                            >
+                                <GiRingingBell
+                                    style={{ width: '20px', height: '20px' }}
+                                />
+                            </MenuButton>
+                        </Tooltip>
+                        <MenuList>
+                            <MenuGroup title="Your notifications"> </MenuGroup>
+                        </MenuList>
+                    </Menu>
+                    <Tooltip label="Friends">
+                        <Button
+                            size="lg"
+                            variant="outline"
+                            style={{ borderRadius: '50%', padding: '0' }}
+                            onClick={onOpenDrawer}
+                        >
+                            <GiPsychicWaves />
+                        </Button>
+                    </Tooltip>
                 </Center>
                 <Center
                     style={{
@@ -135,4 +199,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar;
+export default Navigation;
