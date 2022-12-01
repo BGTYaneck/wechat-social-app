@@ -4,11 +4,14 @@ import { useToast } from '@chakra-ui/react';
 import Description from './components/Description';
 import ProfilePicture from './components/ProfilePicture';
 import NameSurname from './components/NameSurname';
+import { useNavigate } from 'react-router-dom';
+import '../../index.css';
 
 export default function multistep() {
     const toast = useToast();
     const [step, setStep] = useState(1);
     const [progress, setProgress] = useState(33.33);
+    const navigate = useNavigate();
     return (
         <>
             <Box
@@ -70,6 +73,7 @@ export default function multistep() {
                                 }}
                                 colorScheme="red"
                                 variant="outline"
+                                className={'outlineHover'}
                             >
                                 Next &gt;
                             </Button>
@@ -80,14 +84,7 @@ export default function multistep() {
                                 colorScheme="red"
                                 variant="solid"
                                 onClick={() => {
-                                    toast({
-                                        title: 'Congratulations!',
-                                        description:
-                                            'Your account has been registered - have fun using WeChat!',
-                                        status: 'success',
-                                        duration: 3000,
-                                        isClosable: true,
-                                    });
+                                    navigate('/success');
                                 }}
                             >
                                 Submit

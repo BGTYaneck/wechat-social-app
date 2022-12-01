@@ -10,6 +10,6 @@ html {
   background-color: #000b19;
 }
 
-.cantDoHoverInline:hover{
+.outlineHover:hover{
   background-color: #333c47 !important;
 }

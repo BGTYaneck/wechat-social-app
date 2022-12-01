@@ -39,6 +39,7 @@ import {
 import wechatLogo from '../../assets/logo.png';
 import { useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import CreatePostForm from '../CreatePostForm/CreatePostForm';
 import '../../index.css';
 import { getFriendsList } from '../../supabase/friends';
 import { getAvatar, getProfile } from '../../supabase/profiles';
@@ -128,7 +129,10 @@ const Navigation = () => {
                                     });
                                     return (
                                         <>
-                                            <img src={friendAvatar} />
+                                            <img
+                                                alt="Friend profile picture"
+                                                src={friendAvatar}
+                                            />
                                             {friendName}
                                         </>
                                     );
@@ -146,23 +150,16 @@ const Navigation = () => {
             >
                 <ModalOverlay />
                 <ModalContent
-                    style={{ backgroundColor: '#000b19', color: 'white' }}
+                    style={{
+                        backgroundColor: '#000b19',
+                        color: 'white',
+                    }}
                 >
                     <ModalHeader>Create a post</ModalHeader>
                     <ModalCloseButton />
                     <Divider />
-                    <ModalBody></ModalBody>
-
-                    <ModalFooter>
-                        <Button
-                            variant="outline"
-                            colorScheme="red"
-                            type="submit"
-                            className="cantDoHoverInline"
-                        >
-                            Create post
-                        </Button>
-                    </ModalFooter>
+                    <ModalBody>{<CreatePostForm />}</ModalBody>
+                    <ModalFooter></ModalFooter>
                 </ModalContent>
             </Modal>
 
@@ -195,7 +192,7 @@ const Navigation = () => {
                 <Center style={{ marginLeft: '20px', gap: '10px' }}>
                     <Tooltip label="Create a post">
                         <Button
-                            className="cantDoHoverInline"
+                            className="outlineHover"
                             size="lg"
                             variant="ghost"
                             style={{
@@ -211,7 +208,7 @@ const Navigation = () => {
                     <Menu>
                         <Tooltip label="Notifications">
                             <MenuButton
-                                className="cantDoHoverInline"
+                                className="outlineHover"
                                 style={{
                                     borderRadius: '50%',
                                     border: '1px solid #333c47',
@@ -235,7 +232,7 @@ const Navigation = () => {
                     </Menu>
                     <Tooltip label="Friends">
                         <Button
-                            className="cantDoHoverInline"
+                            className="outlineHover"
                             size="lg"
                             variant="ghost"
                             style={{
@@ -274,7 +271,7 @@ const Navigation = () => {
                         <Button
                             colorScheme="red"
                             variant="outline"
-                            className="cantDoHoverInline"
+                            className="outlineHover"
                             style={{ padding: '0 0 0 8px' }}
                             leftIcon={
                                 <GiExitDoor
