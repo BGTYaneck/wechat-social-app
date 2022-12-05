@@ -6,6 +6,7 @@ import Homepage from './pages/Homepage/Homepage';
 import CompleteProfile from './pages/CompleteProfile/CompleteProfile';
 import Error from './pages/Error';
 import Success from './pages/CompleteProfile/components/Success';
+import Redirect from './pages/Auth/Redirect';
 
 function App() {
     return (
@@ -20,6 +21,10 @@ function App() {
                     <Route
                         path="/register"
                         element={<AuthPage children={<Register />} />}
+                    />
+                    <Route
+                        path="/auth/redirect"
+                        element={<Redirect />}
                     />
                     {/*Account completion*/}
                     <Route
