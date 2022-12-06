@@ -7,11 +7,34 @@ import NameSurname from './components/NameSurname';
 import { useNavigate } from 'react-router-dom';
 import '../../index.css';
 
+interface NamePayload {
+    name: string;
+    surname: string;
+}
+
 export default function multistep() {
     const toast = useToast();
     const [step, setStep] = useState(1);
     const [progress, setProgress] = useState(33.33);
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [desc, setDesc] = useState('');
+    const [photo, setPhoto] = useState(new File([], ''));
     const navigate = useNavigate();
+
+    const nameCallback = ({ name, surname }: NamePayload) => {
+        setName(name);
+        setSurname(surname);
+    };
+
+    const descCallback = (desc: string) => {
+        setDesc(desc);
+    };
+
+    const photoCallback = (photo: File) => {
+        setPhoto(photo);
+    };
+
     return (
         <>
             <Box
@@ -32,11 +55,21 @@ export default function multistep() {
                     }}
                 ></Progress>
                 {step === 1 ? (
-                    <NameSurname />
+                    <NameSurname
+                        callback={nameCallback}
+                        nameParent={name}
+                        surnameParent={surname}
+                    />
                 ) : step === 2 ? (
-                    <Description />
+                    <Description
+                        callback={descCallback}
+                        descParent={desc}
+                    />
                 ) : (
-                    <ProfilePicture />
+                    <ProfilePicture
+                        callback={photoCallback}
+                        photoParent={photo}
+                    />
                 )}
                 <ButtonGroup
                     mt="5%"
@@ -84,7 +117,8 @@ export default function multistep() {
                                 colorScheme="red"
                                 variant="solid"
                                 onClick={() => {
-                                    navigate('/success');
+                                    console.log(name, surname, desc, photo);
+                                    //navigate('/success');
                                 }}
                             >
                                 Submit

@@ -13,6 +13,18 @@ export async function uploadAvatar(img: File) {
     return;
 }
 
+export async function uploadBanner(img: File) {
+    try {
+        const userId = await getCurrentUserId();
+        if (typeof userId === 'string') {
+            await uploadFile(img, 'profileBanner', userId);
+        }
+    } catch (e) {
+        throw e;
+    }
+    return;
+}
+
 export async function pinPost(id: string) {
     const { data, error } = await supabase
         .from('posts')
@@ -28,6 +40,20 @@ export async function pinPost(id: string) {
         .update({ pinned_post: data[0].id })
         .eq('id', await getCurrentUserId());
     if (response.error) throw response.error;
+}
+
+export async function updateProfile(
+    name?: string,
+    desc?: string,
+    status?: string
+) {
+    if (name === undefined && desc === undefined && status === undefined)
+        return;
+    const { data, error } = await supabase
+        .from('profiles')
+        .upsert({ name, desc, status })
+        .eq('id', await getCurrentUserId());
+    if (error) throw error;
 }
 
 export async function getProfile(id?: string | null) {

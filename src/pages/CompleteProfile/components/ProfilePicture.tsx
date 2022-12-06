@@ -5,10 +5,24 @@ import {
     Heading,
     SlideFade,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const ProfilePicture = () => {
+interface Props {
+    callback: Function;
+    photoParent: File;
+}
+
+const ProfilePicture = ({ callback, photoParent }: Props) => {
     const isOpen = true;
+    let [photo, setPhoto] = useState(photoParent);
+    const handleCallback = () => callback(photo);
+    useEffect(() => {
+        handleCallback();
+    }, [photo]);
+    const handlePhotoChange = (e: any) => {
+        let inputValue = e.target.value;
+        setPhoto(inputValue);
+    };
     return (
         <SlideFade
             in={isOpen}

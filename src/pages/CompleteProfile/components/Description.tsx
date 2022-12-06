@@ -7,10 +7,24 @@ import {
     Textarea,
     SlideFade,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const Description = () => {
+interface Props {
+    callback: Function;
+    descParent: string;
+}
+
+const Description = ({ callback, descParent }: Props) => {
     const isOpen = true;
+    let [desc, setDesc] = useState(descParent);
+    const handleCallback = () => callback(desc);
+    useEffect(() => {
+        handleCallback();
+    }, [desc]);
+    const handleDescChange = (e: any) => {
+        let inputValue = e.target.value;
+        setDesc(inputValue);
+    };
     return (
         <SlideFade
             in={isOpen}
@@ -38,6 +52,8 @@ const Description = () => {
                         A brief description of yourself
                     </FormLabel>
                     <Textarea
+                        value={desc}
+                        onChange={handleDescChange}
                         placeholder="I was born to be that true person, not really to be perfect.
                                      The thoughts of me, which others harbor, is none of my business.
                                      I am so much in love with the confidence that makeup gives to me.
