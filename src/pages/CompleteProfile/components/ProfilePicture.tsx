@@ -1,28 +1,30 @@
-import {
-    FormControl,
-    FormLabel,
-    GridItem,
-    Heading,
-    SlideFade,
-} from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { FormControl, GridItem, Heading, SlideFade } from '@chakra-ui/react';
+import '../../../index.css';
 
-interface Props {
-    callback: Function;
-    photoParent: File;
-}
-
-const ProfilePicture = ({ callback, photoParent }: Props) => {
+const ProfilePicture = () => {
+    const uploadedImage = React.useRef(null);
+    const imageUploader = React.useRef(null);
     const isOpen = true;
-    let [photo, setPhoto] = useState(photoParent);
-    const handleCallback = () => callback(photo);
-    useEffect(() => {
-        handleCallback();
-    }, [photo]);
-    const handlePhotoChange = (e: any) => {
-        let inputValue = e.target.value;
-        setPhoto(inputValue);
+
+    const handleImageUpload = (e: any) => {
+        const [file] = e.target.files;
+        if (file) {
+            const reader = new FileReader();
+            const { current } = uploadedImage;
+            // @ts-ignore
+            current.file = file;
+            reader.onload = (e) => {
+                // @ts-ignore
+                current.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     };
+
+    // @ts-ignore
+    // @ts-ignore
+    // @ts-ignore
     return (
         <SlideFade
             in={isOpen}
@@ -39,7 +41,70 @@ const ProfilePicture = ({ callback, photoParent }: Props) => {
             <FormControl
                 as={GridItem}
                 colSpan={[6, 3]}
-            ></FormControl>
+            >
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        ref={imageUploader}
+                        style={{
+                            display: 'none',
+                        }}
+                    />
+                    <p
+                        style={{
+                            opacity: '50%',
+                            fontSize: '10px',
+                            marginTop: '2px',
+                            textAlign: 'center',
+                        }}
+                    >
+                        300x300
+                    </p>
+                    <div
+                        style={{
+                            borderRadius: '30px',
+                            height: '300px',
+                            width: '300px',
+                            border: '4px solid #E53E3E',
+                        }}
+                        /*@ts-ignore*/
+                        onClick={() => imageUploader.current.click()}
+                    >
+                        <img
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                borderRadius: '25px',
+                            }}
+                            className={'uploadProfile'}
+                            src={
+                                'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
+                            }
+                            ref={uploadedImage}
+                            alt={'Profile picture'}
+                        />
+                    </div>
+                    <p
+                        style={{
+                            opacity: '50%',
+                            fontSize: '14px',
+                            marginTop: '2px',
+                            textAlign: 'center',
+                        }}
+                    >
+                        Leave empty to skip for now
+                    </p>
+                </div>
+            </FormControl>
         </SlideFade>
     );
 };

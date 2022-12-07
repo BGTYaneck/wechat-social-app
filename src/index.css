@@ -13,3 +13,9 @@ html {
 .outlineHover:hover{
   background-color: #333c47 !important;
 }
+
+.uploadProfile:hover{
+opacity: 75%;
+  cursor: pointer;
+
+}
