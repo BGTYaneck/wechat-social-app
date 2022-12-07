@@ -2,7 +2,12 @@ import React from 'react';
 import { FormControl, GridItem, Heading, SlideFade } from '@chakra-ui/react';
 import '../../../index.css';
 
-const ProfilePicture = () => {
+interface Props {
+    callback: Function;
+    photoParent: File;
+}
+
+const ProfilePicture = ({ callback, photoParent }: Props) => {
     const uploadedImage = React.useRef(null);
     const imageUploader = React.useRef(null);
     const isOpen = true;

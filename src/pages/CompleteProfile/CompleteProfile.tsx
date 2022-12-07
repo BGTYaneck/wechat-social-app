@@ -13,14 +13,12 @@ interface NamePayload {
 }
 
 export default function multistep() {
-    const toast = useToast();
     const [step, setStep] = useState(1);
     const [progress, setProgress] = useState(33.33);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [desc, setDesc] = useState('');
     const [photo, setPhoto] = useState(new File([], ''));
-    const navigate = useNavigate();
 
     const nameCallback = ({ name, surname }: NamePayload) => {
         setName(name);
@@ -35,6 +33,7 @@ export default function multistep() {
         setPhoto(photo);
     };
 
+    // @ts-ignore
     return (
         <>
             <Box
@@ -121,7 +120,7 @@ export default function multistep() {
                                     //navigate('/success');
                                 }}
                             >
-                                Submit
+                                Finish
                             </Button>
                         ) : null}
                     </Flex>
