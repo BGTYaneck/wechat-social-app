@@ -7,6 +7,15 @@ html {
   font-family: Lato, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #000b19;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+.outlineHover:hover{
+  background-color: #333c47 !important;
+}
+
+.uploadProfile:hover{
+opacity: 75%;
+  cursor: pointer;
+
+}

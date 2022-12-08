@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Button,
     Input,
@@ -11,32 +11,20 @@ import {
     Divider,
     Checkbox,
     ScaleFade,
-    Text,
-    AlertIcon,
-    AlertTitle,
-    AlertDescription,
-    Alert,
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import {
-    IconLogin,
-    IconUser,
-    IconLock,
-    IconBrandFacebook,
-    IconBrandGoogle,
-    IconBrandChrome,
-} from '@tabler/icons';
+import { IconLogin, IconUser, IconLock } from '@tabler/icons';
 import wechatLogo from '../../../assets/logo.png';
 import { FcGoogle } from 'react-icons/fc';
 import {
     getCurrentUserId,
     loginWithEmail,
-    loginWithFacebook,
     loginWithGoogle,
 } from '../../../supabase/auth';
+import { useToast } from '@chakra-ui/react';
 
 interface LoginInfo {
     email: string;
@@ -45,8 +33,11 @@ interface LoginInfo {
 }
 const LoginSchema = Yup.object().shape({
     email: Yup.string()
-        .email('Incorrect e-mail address!')
-        .required('E-mail cannot be empty'),
+        .required('E-mail cannot be empty')
+        .matches(
+            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            'E-mail is invalid or contains invalid symbols'
+        ),
     password: Yup.string()
         .min(6, 'Password too short.')
         .max(33, 'Password too long')
@@ -54,12 +45,14 @@ const LoginSchema = Yup.object().shape({
 });
 
 const Login = () => {
-    const [Error, setError] = useState('');
     const isOpen = true;
     const navigate = useNavigate();
+    const toast = useToast();
+
     getCurrentUserId().then((value) => {
         if (value) navigate('/');
     });
+
     const {
         register,
         handleSubmit,
@@ -73,7 +66,14 @@ const Login = () => {
         try {
             await loginWithEmail(data['email'], data['password']);
         } catch (e: any) {
-            setError(e.message);
+            toast({
+                title: 'Error',
+                description: e.message.toString(),
+                status: 'error',
+                variant: 'subtle',
+                isClosable: true,
+                duration: 5000,
+            });
             return;
         }
     };
@@ -84,172 +84,150 @@ const Login = () => {
 
     return (
         <>
-            <Alert
-                status="error"
-                style={{
-                    display: Error != '' ? 'flex' : 'none',
-                    flexDirection: 'column',
-                    marginTop: '1rem',
-                    position: 'fixed',
-                    top: '0',
-                    textAlign: 'center',
-                    width: '100vw',
-                }}
-            >
-                <AlertIcon />
-                <AlertTitle>
-                    We had a problem processing your request!
-                </AlertTitle>
-                <AlertDescription>{Error}</AlertDescription>
-            </Alert>
             <ScaleFade
                 initialScale={0.5}
                 in={isOpen}
             >
-                <form
-                    style={{
-                        backgroundColor: 'white',
-                        borderRadius: '8%',
-                        marginTop: '7.6rem',
-                    }}
-                    onSubmit={handleSubmit(onSubmit)}
-                >
-                    <AspectRatio
-                        maxW="400px"
-                        ratio={2 / 1}
+                <Center style={{ height: '100vh' }}>
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        target="/auth/redirect"
                     >
-                        <Image
-                            src={wechatLogo}
-                            alt="WeChat Logo"
-                            objectFit="cover"
-                        />
-                    </AspectRatio>
-                    <Center>
-                        <Heading>WeChat</Heading>
-                    </Center>
-                    <br />
-                    <InputGroup>
-                        <InputLeftElement
-                            pointerEvents="none"
-                            color="gray.300"
-                            children={<IconUser />}
-                        />
-                        <Input
-                            type="text"
-                            errorBorderColor="red.500"
-                            focusBorderColor="red.300"
-                            {...register('email')}
-                            placeholder="your@email.com"
-                        />
-                    </InputGroup>
-                    <p
-                        style={{
-                            color: 'red',
-                            fontSize: '12px',
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        {errors.email?.message}
-                    </p>
-                    <br />
-                    <InputGroup>
-                        <InputLeftElement
-                            pointerEvents="none"
-                            color="gray.300"
-                            fontSize="1.2em"
-                            children={<IconLock />}
-                        />
-                        <Input
-                            type="password"
-                            errorBorderColor="red.500"
-                            focusBorderColor="red.300"
-                            {...register('password')}
-                            placeholder="●●●●●●●●●●"
-                        />
-                    </InputGroup>
-                    <p
-                        style={{
-                            color: 'red',
-                            fontSize: '12px',
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        {errors.password?.message}
-                    </p>
-                    <Checkbox
-                        style={{ margin: '12px 0px 12px 2px' }}
-                        {...register('rememberMe')}
-                        defaultChecked
-                        colorScheme="red"
-                    >
-                        Remember me
-                    </Checkbox>
-                    <br />
-                    <Button
-                        leftIcon={<IconLogin />}
-                        colorScheme="red"
-                        borderRadius="xl"
-                        width="xs"
-                        type="submit"
-                    >
-                        Log in to wechat
-                    </Button>
-                    <Divider
-                        style={{
-                            margin: '20px 0px 20px 0px',
-                        }}
-                    />
-                    <Center>
-                        <Button
-                            style={{
-                                margin: '0 0 10px 0',
-                                boxShadow: '2px 2px 2px 1px rgba(0, 0, 0, 0.2)',
-                            }}
-                            leftIcon={
-                                <p style={{ width: '28px', height: '28px' }}>
-                                    <FcGoogle
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                        }}
-                                    />
-                                </p>
-                            }
-                            colorScheme="alphaBlack"
-                            variant="ghost"
-                            borderRadius="xl"
-                            width="xs"
-                            onClick={LoginWithGoogleBtn}
+                        <AspectRatio
+                            maxW="400px"
+                            ratio={2 / 1}
                         >
-                            Log in using Google
-                        </Button>
-                    </Center>
-                    <Center>
+                            <Image
+                                src={wechatLogo}
+                                alt="WeChat Logo"
+                                objectFit="cover"
+                            />
+                        </AspectRatio>
+                        <Center>
+                            <Heading>WeChat</Heading>
+                        </Center>
+                        <br />
+                        <InputGroup>
+                            <InputLeftElement
+                                pointerEvents="none"
+                                color="gray.300"
+                                children={<IconUser />}
+                            />
+                            <Input
+                                type="text"
+                                errorBorderColor="red.500"
+                                focusBorderColor="red.300"
+                                {...register('email')}
+                                placeholder="your@email.com"
+                            />
+                        </InputGroup>
                         <p
                             style={{
-                                margin: '20px 0 0 0',
-                                fontSize: '14px',
-                                color: 'hex(#d1d5db)',
+                                color: 'red',
+                                fontSize: '12px',
+                                fontWeight: 'bold',
                             }}
                         >
-                            Don't have an account?
+                            {errors.email?.message}
                         </p>
-                    </Center>
-                    <Center>
-                        <Link to={'/register'}>
+                        <br />
+                        <InputGroup>
+                            <InputLeftElement
+                                pointerEvents="none"
+                                color="gray.300"
+                                fontSize="1.2em"
+                                children={<IconLock />}
+                            />
+                            <Input
+                                type="password"
+                                errorBorderColor="red.500"
+                                focusBorderColor="red.300"
+                                {...register('password')}
+                                placeholder="●●●●●●●●●●"
+                            />
+                        </InputGroup>
+                        <p
+                            style={{
+                                color: 'red',
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            {errors.password?.message}
+                        </p>
+                        <Checkbox
+                            style={{ margin: '12px 0px 12px 2px' }}
+                            {...register('rememberMe')}
+                            defaultChecked
+                            colorScheme="red"
+                        >
+                            Remember me
+                        </Checkbox>
+                        <br />
+                        <Button
+                            leftIcon={<IconLogin />}
+                            colorScheme="red"
+                            borderRadius="xl"
+                            width="xs"
+                            type="submit"
+                            bgGradient="linear(to-tr, red.400, red.500, red.600)"
+                        >
+                            Log in to WeChat
+                        </Button>
+                        <Divider
+                            style={{
+                                margin: '20px 0px 20px 0px',
+                            }}
+                        />
+                        <Center>
+                            <Button
+                                style={{
+                                    margin: '0 0 10px 0',
+                                }}
+                                leftIcon={
+                                    <FcGoogle
+                                        style={{
+                                            width: '28px',
+                                            height: '28px',
+                                        }}
+                                    />
+                                }
+                                colorScheme="white"
+                                variant="outline"
+                                borderRadius="xl"
+                                width="xs"
+                                onClick={LoginWithGoogleBtn}
+                            >
+                                Log in using Google
+                            </Button>
+                        </Center>
+                        <Center>
                             <p
                                 style={{
-                                    fontSize: '12px',
+                                    margin: '20px 0 0 0',
+                                    fontSize: '14px',
                                     color: 'hex(#d1d5db)',
-                                    textDecoration: 'underline',
-                                    cursor: 'pointer',
                                 }}
                             >
-                                Register now!
+                                Don't have an account?
                             </p>
-                        </Link>
-                    </Center>
-                </form>
+                        </Center>
+                        <Center>
+                            <Link to={'/register'}>
+                                <p
+                                    style={{
+                                        fontSize: '12px',
+                                        color: 'hex(#d1d5db)',
+                                        textDecoration: 'underline',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    Register now!
+                                </p>
+                            </Link>
+                        </Center>
+                    </form>
+                </Center>
             </ScaleFade>
         </>
     );

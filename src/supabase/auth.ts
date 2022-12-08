@@ -11,6 +11,9 @@ export async function loginWithEmail(email: string, password: string) {
 export async function loginWithGoogle() {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
+        options: {
+            redirectTo: '/auth/redirect',
+        },
     });
     if (error) throw error;
 }
@@ -22,9 +25,13 @@ export async function registerWithEmail(email: string, password: string) {
     });
     if (error) throw error;
 }
+
 export async function loginWithFacebook() {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
+        options: {
+            redirectTo: '/auth/redirect',
+        },
     });
     if (error) throw error;
 }
