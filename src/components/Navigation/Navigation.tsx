@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getCurrentUserId, logOut } from '../../supabase/auth';
 import {
     Center,
@@ -71,17 +71,19 @@ const Navigation = () => {
         return list;
     };
     let userId: string | null;
-    getCurrentUserId().then((value) => (userId = value));
-    getAvatar().then((value) => {
-        if (value) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                // @ts-ignore
-                setSrc(e.target.result);
-            };
-            reader.readAsDataURL(value);
-        }
-    });
+    useEffect(() => {
+        getCurrentUserId().then((value) => (userId = value));
+        getAvatar().then((value) => {
+            if (value) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    // @ts-ignore
+                    setSrc(e.target.result);
+                };
+                reader.readAsDataURL(value);
+            }
+        });
+    }, []);
 
     return (
         <>

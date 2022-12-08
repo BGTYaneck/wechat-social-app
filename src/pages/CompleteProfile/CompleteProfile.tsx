@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Progress, Box, ButtonGroup, Button, Flex } from '@chakra-ui/react';
 import Description from './components/Description';
 import ProfilePicture from './components/ProfilePicture';
@@ -18,12 +18,14 @@ interface NamePayload {
 }
 
 export default function multistep() {
-    getCurrentUserId().then((value) => {
-        if (!value) navigate('/login');
-        getProfile(value).then((value) => {
-            if (value) navigate('/');
+    useEffect(() => {
+        getCurrentUserId().then((value) => {
+            if (!value) navigate('/login');
+            getProfile(value).then((value) => {
+                if (value) navigate('/');
+            });
         });
-    });
+    }, []);
     const [step, setStep] = useState(1);
     const [progress, setProgress] = useState(33.33);
     const [name, setName] = useState('');
@@ -131,11 +133,17 @@ export default function multistep() {
                                     console.log(name, surname, desc, photo);
                                     insertProfile(`${name} ${surname}`, desc)
                                         .then(() => {
-                                            uploadAvatar(photo).then(() => {
-                                                navigate(
-                                                    '/complete-profile/success'
-                                                );
-                                            });
+                                            uploadAvatar(photo)
+                                                .then(() => {
+                                                    navigate(
+                                                        '/complete-profile/success'
+                                                    );
+                                                })
+                                                .catch((reason) => {
+                                                    navigate(
+                                                        `/complete-profile/error?message=${reason.message}`
+                                                    );
+                                                });
                                         })
                                         .catch((reason) =>
                                             navigate(

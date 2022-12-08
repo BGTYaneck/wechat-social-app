@@ -8,6 +8,7 @@ import Error from './pages/Error';
 import Success from './pages/CompleteProfile/components/Success';
 import Redirect from './pages/Auth/Redirect';
 import ProfileError from './pages/CompleteProfile/components/Error';
+import Profile from './pages/Profile/Profile';
 
 function App() {
     return (
@@ -47,8 +48,12 @@ function App() {
                     />
                     {/*Profile*/}
                     <Route
-                        path="/user/"
-                        element={<Homepage />}
+                        path="/user/:id"
+                        element={<Profile />}
+                    />
+                    <Route
+                        path="/user"
+                        element={<Profile />}
                     />
                     {/*Not found*/}
                     <Route

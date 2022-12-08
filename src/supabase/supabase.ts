@@ -29,7 +29,9 @@ export async function uploadFile(file: File, type: FileTypes, id: string) {
     // path += '.png';
     let { error: uploadError } = await supabase.storage
         .from('public')
-        .upload(path, file);
+        .update(path, file, {
+            upsert: true,
+        });
     if (uploadError) throw uploadError;
 }
 
@@ -41,12 +43,6 @@ export function getBase64Image(img: File) {
     };
     reader.readAsDataURL(img);
     return dataUrl;
-}
-
-export function base64ToImage(value: string): HTMLImageElement {
-    var image = new Image();
-    image.src = value;
-    return image;
 }
 
 export default supabase;
