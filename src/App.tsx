@@ -7,6 +7,7 @@ import CompleteProfile from './pages/CompleteProfile/CompleteProfile';
 import Error from './pages/Error';
 import Success from './pages/CompleteProfile/components/Success';
 import Redirect from './pages/Auth/Redirect';
+import ProfileError from './pages/CompleteProfile/components/Error';
 
 function App() {
     return (
@@ -32,8 +33,12 @@ function App() {
                         element={<CompleteProfile />}
                     />
                     <Route
-                        path="/success"
+                        path="/complete-profile/success"
                         element={<Success />}
+                    />
+                    <Route
+                        path="/complete-profile/error"
+                        element={<ProfileError />}
                     />
                     {/*Main page*/}
                     <Route

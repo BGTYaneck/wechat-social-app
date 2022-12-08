@@ -51,8 +51,15 @@ export async function updateProfile(
         return;
     const { data, error } = await supabase
         .from('profiles')
-        .upsert({ name, desc, status })
+        .upsert({ name, description: desc, status })
         .eq('id', await getCurrentUserId());
+    if (error) throw error;
+}
+
+export async function insertProfile(name: string, desc: string) {
+    const { data, error } = await supabase
+        .from('profiles')
+        .upsert({ id: await getCurrentUserId(), name, description: desc });
     if (error) throw error;
 }
 
@@ -73,7 +80,7 @@ export async function getAvatar(id?: string | null) {
     if (id === null) return;
     const { data, error } = await supabase.storage
         .from('public')
-        .download(`avatar/profile/${id}`);
+        .download(`public/avatar/profile/${id}`);
     if (error) throw error;
     return data;
 }

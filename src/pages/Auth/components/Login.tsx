@@ -89,7 +89,10 @@ const Login = () => {
                 in={isOpen}
             >
                 <Center style={{ height: '100vh' }}>
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        target="/auth/redirect"
+                    >
                         <AspectRatio
                             maxW="400px"
                             ratio={2 / 1}

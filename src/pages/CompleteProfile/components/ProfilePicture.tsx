@@ -25,6 +25,7 @@ const ProfilePicture = ({ callback, photoParent }: Props) => {
             };
             reader.readAsDataURL(file);
         }
+        callback(file);
     };
 
     // @ts-ignore

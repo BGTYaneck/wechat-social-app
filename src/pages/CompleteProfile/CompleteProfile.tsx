@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { Progress, Box, ButtonGroup, Button, Flex } from '@chakra-ui/react';
-import { useToast } from '@chakra-ui/react';
 import Description from './components/Description';
 import ProfilePicture from './components/ProfilePicture';
 import NameSurname from './components/NameSurname';
 import { useNavigate } from 'react-router-dom';
+import {
+    getProfile,
+    insertProfile,
+    uploadAvatar,
+} from '../../supabase/profiles';
 import '../../index.css';
+import { getCurrentUserId } from '../../supabase/auth';
 
 interface NamePayload {
     name: string;
@@ -13,12 +18,19 @@ interface NamePayload {
 }
 
 export default function multistep() {
+    getCurrentUserId().then((value) => {
+        if (!value) navigate('/login');
+        getProfile(value).then((value) => {
+            if (value) navigate('/');
+        });
+    });
     const [step, setStep] = useState(1);
     const [progress, setProgress] = useState(33.33);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [desc, setDesc] = useState('');
     const [photo, setPhoto] = useState(new File([], ''));
+    const navigate = useNavigate();
 
     const nameCallback = ({ name, surname }: NamePayload) => {
         setName(name);
@@ -117,7 +129,19 @@ export default function multistep() {
                                 variant="solid"
                                 onClick={() => {
                                     console.log(name, surname, desc, photo);
-                                    //navigate('/success');
+                                    insertProfile(`${name} ${surname}`, desc)
+                                        .then(() => {
+                                            uploadAvatar(photo).then(() => {
+                                                navigate(
+                                                    '/complete-profile/success'
+                                                );
+                                            });
+                                        })
+                                        .catch((reason) =>
+                                            navigate(
+                                                `/complete-profile/error?message=${reason.message}`
+                                            )
+                                        );
                                 }}
                             >
                                 Finish

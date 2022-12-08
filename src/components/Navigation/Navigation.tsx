@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getCurrentUserId, logOut } from '../../supabase/auth';
 import {
     Center,
@@ -15,11 +15,7 @@ import {
     Menu,
     MenuButton,
     MenuList,
-    MenuItem,
-    MenuItemOption,
     MenuGroup,
-    MenuOptionGroup,
-    MenuDivider,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -45,6 +41,9 @@ import { getFriendsList } from '../../supabase/friends';
 import { getAvatar, getProfile } from '../../supabase/profiles';
 
 const Navigation = () => {
+    const [src, setSrc] = useState(
+        'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
+    );
     const navigate = useNavigate();
     const {
         isOpen: isOpenModal,
@@ -58,7 +57,7 @@ const Navigation = () => {
     } = useDisclosure();
 
     const LogOutBtn = (e: React.MouseEvent<HTMLElement>) => {
-        logOut().then((value) => {
+        logOut().then((_) => {
             window.location.href = '/login';
         });
     };
@@ -73,6 +72,16 @@ const Navigation = () => {
     };
     let userId: string | null;
     getCurrentUserId().then((value) => (userId = value));
+    getAvatar().then((value) => {
+        if (value) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                // @ts-ignore
+                setSrc(e.target.result);
+            };
+            reader.readAsDataURL(value);
+        }
+    });
 
     return (
         <>
@@ -263,7 +272,7 @@ const Navigation = () => {
                             }}
                             bg="red.500"
                             name="Place Holder"
-                            src="placeholder"
+                            src={src}
                             onClick={() => navigate('/user')}
                         />
                     </Tooltip>
