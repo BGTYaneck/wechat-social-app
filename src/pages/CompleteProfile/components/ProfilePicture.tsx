@@ -28,9 +28,6 @@ const ProfilePicture = ({ callback, photoParent }: Props) => {
         callback(file);
     };
 
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
     return (
         <SlideFade
             in={isOpen}
