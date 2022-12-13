@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { AspectRatio, Tooltip, Center } from '@chakra-ui/react';
+import { AspectRatio } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { getCurrentUserId } from '../../supabase/auth';
 import { getAvatar, getProfile } from '../../supabase/profiles';
 import { Image } from '@chakra-ui/react';
 import { AiFillEdit } from 'react-icons/all';
+import placeholder from '../../assets/placeholder.jpg';
+import { getFriendsList } from '../../supabase/friends';
 
 interface ProfileData {
     id: string;
@@ -16,10 +18,9 @@ interface ProfileData {
 const UserProfile = () => {
     const [name, setName] = useState('');
     const [creationDate, setCreationDate] = useState('');
+    const [count, setCount] = useState<number | undefined>(0);
     const [desc, setDesc] = useState<string | null>('');
-    const [src, setSrc] = useState(
-        'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
-    );
+    const [src, setSrc] = useState(placeholder);
     let id: string | undefined | null;
     id = useParams().id;
     if (id === undefined) {
@@ -44,6 +45,10 @@ const UserProfile = () => {
             }
         });
     }, []);
+
+    getFriendsList().then((value) => {
+        setCount(value?.length);
+    });
 
     return (
         <div
@@ -87,7 +92,9 @@ const UserProfile = () => {
             <p style={{ fontSize: '14px', color: '#333c47' }}>
                 Joined {new Date(creationDate).toLocaleDateString()}
             </p>
-            <p style={{ fontSize: '16px', color: '#333c47' }}>173 Friends</p>
+            <p style={{ fontSize: '16px', color: '#333c47' }}>
+                {count} Friends
+            </p>
             <p
                 style={{
                     borderTop: '1px solid #333c47',
