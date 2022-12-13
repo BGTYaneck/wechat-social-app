@@ -9,17 +9,13 @@ import { AiFillEdit } from 'react-icons/all';
 interface ProfileData {
     id: string;
     name: string;
-    pinned_post: string | null;
     created_at: string;
-    status: string | null;
     description: string | null;
 }
 
 const UserProfile = () => {
     const [name, setName] = useState('');
-    const [pinnedPost, setPinnedPost] = useState<string | null>(null);
     const [creationDate, setCreationDate] = useState('');
-    const [status, setStatus] = useState<string | null>(null);
     const [desc, setDesc] = useState<string | null>('');
     const [src, setSrc] = useState(
         'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
@@ -34,9 +30,7 @@ const UserProfile = () => {
     useEffect(() => {
         getProfile(id).then((value: ProfileData) => {
             setName(value.name);
-            setPinnedPost(value.pinned_post);
             setCreationDate(value.created_at);
-            setStatus(value.status);
             setDesc(value.description);
         });
         getAvatar().then((value) => {

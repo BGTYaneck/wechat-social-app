@@ -47,7 +47,6 @@ export default function multistep() {
         setPhoto(photo);
     };
 
-    // @ts-ignore
     return (
         <>
             <Box
