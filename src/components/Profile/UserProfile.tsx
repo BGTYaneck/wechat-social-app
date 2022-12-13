@@ -7,6 +7,7 @@ import { Image } from '@chakra-ui/react';
 import { AiFillEdit } from 'react-icons/all';
 import placeholder from '../../assets/placeholder.jpg';
 import { getFriendsList } from '../../supabase/friends';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfileData {
     id: string;
@@ -50,6 +51,8 @@ const UserProfile = () => {
         setCount(value?.length);
     });
 
+    const navigate = useNavigate();
+
     return (
         <div
             style={{
@@ -86,6 +89,7 @@ const UserProfile = () => {
                         cursor: 'pointer',
                         opacity: '80%',
                     }}
+                    onClick={() => navigate('/edit-profile')}
                 />
             </p>
 

@@ -16,7 +16,6 @@ import {
     MenuButton,
     MenuList,
     MenuGroup,
-    MenuItem,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -33,7 +32,6 @@ import {
     GiRingingBell,
     IoIosArrowDown,
     GiPsychicWaves,
-    AiFillEdit,
 } from 'react-icons/all';
 import wechatLogo from '../../assets/logo.png';
 import { useDisclosure } from '@chakra-ui/react';
@@ -43,11 +41,10 @@ import '../../index.css';
 import { getFriendsList } from '../../supabase/friends';
 import { getAvatar, getProfile } from '../../supabase/profiles';
 import UserProfile from '../Profile/UserProfile';
+import placeholder from '../../assets/placeholder.jpg';
 
 const Navigation = () => {
-    const [src, setSrc] = useState(
-        'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
-    );
+    const [src, setSrc] = useState(placeholder);
     const navigate = useNavigate();
     const {
         isOpen: isOpenModal,

@@ -8,6 +8,7 @@ import Error from './pages/Error';
 import Success from './pages/CompleteProfile/components/Success';
 import Redirect from './pages/Auth/Redirect';
 import ProfileError from './pages/CompleteProfile/components/Error';
+import EditProfile from './pages/EditProfile/EditProfile';
 
 function App() {
     return (
@@ -49,6 +50,11 @@ function App() {
                     <Route
                         path="/error"
                         element={<Error />}
+                    />
+                    {/*Profile Edit*/}
+                    <Route
+                        path="/edit-profile"
+                        element={<EditProfile />}
                     />
                 </Routes>
             </BrowserRouter>
