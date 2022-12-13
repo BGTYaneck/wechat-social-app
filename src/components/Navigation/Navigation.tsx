@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getCurrentUserId, logOut } from '../../supabase/auth';
 import {
     Center,
@@ -16,6 +16,7 @@ import {
     MenuButton,
     MenuList,
     MenuGroup,
+    MenuItem,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -30,7 +31,9 @@ import {
     GiExitDoor,
     GiFeather,
     GiRingingBell,
+    IoIosArrowDown,
     GiPsychicWaves,
+    AiFillEdit,
 } from 'react-icons/all';
 import wechatLogo from '../../assets/logo.png';
 import { useDisclosure } from '@chakra-ui/react';
@@ -39,6 +42,7 @@ import CreatePostForm from '../CreatePostForm/CreatePostForm';
 import '../../index.css';
 import { getFriendsList } from '../../supabase/friends';
 import { getAvatar, getProfile } from '../../supabase/profiles';
+import UserProfile from '../Profile/UserProfile';
 
 const Navigation = () => {
     const [src, setSrc] = useState(
@@ -71,17 +75,19 @@ const Navigation = () => {
         return list;
     };
     let userId: string | null;
-    getCurrentUserId().then((value) => (userId = value));
-    getAvatar().then((value) => {
-        if (value) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                // @ts-ignore
-                setSrc(e.target.result);
-            };
-            reader.readAsDataURL(value);
-        }
-    });
+    useEffect(() => {
+        getCurrentUserId().then((value) => (userId = value));
+        getAvatar().then((value) => {
+            if (value) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    // @ts-ignore
+                    setSrc(e.target.result);
+                };
+                reader.readAsDataURL(value);
+            }
+        });
+    }, []);
 
     return (
         <>
@@ -263,19 +269,35 @@ const Navigation = () => {
                         gap: '12px',
                     }}
                 >
-                    <Tooltip label="Your profile">
-                        <Avatar
+                    <Menu>
+                        <MenuButton>
+                            <Tooltip label="Your profile">
+                                <Center
+                                    style={{ gap: '10px', cursor: 'pointer' }}
+                                >
+                                    <IoIosArrowDown />
+                                    <Avatar
+                                        style={{
+                                            height: '40px',
+                                            width: '40px',
+                                        }}
+                                        name="Place Holder"
+                                        src={src}
+                                    />
+                                </Center>
+                            </Tooltip>
+                        </MenuButton>
+                        <MenuList
                             style={{
-                                height: '40px',
-                                width: '40px',
-                                cursor: 'pointer',
+                                backgroundColor: '#000b19',
+                                border: '1px solid #333C47',
+                                marginTop: '15px',
                             }}
-                            bg="red.500"
-                            name="Place Holder"
-                            src={src}
-                            onClick={() => navigate('/user')}
-                        />
-                    </Tooltip>
+                        >
+                            <UserProfile />
+                        </MenuList>
+                    </Menu>
+
                     <Tooltip label="Log Out">
                         <Button
                             colorScheme="red"

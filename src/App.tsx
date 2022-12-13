@@ -45,11 +45,6 @@ function App() {
                         path="/"
                         element={<Homepage />}
                     />
-                    {/*Profile*/}
-                    <Route
-                        path="/user/"
-                        element={<Homepage />}
-                    />
                     {/*Not found*/}
                     <Route
                         path="/error"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Button,
     Input,
@@ -49,9 +49,11 @@ const Login = () => {
     const navigate = useNavigate();
     const toast = useToast();
 
-    getCurrentUserId().then((value) => {
-        if (value) navigate('/');
-    });
+    useEffect(() => {
+        getCurrentUserId().then((value) => {
+            if (value) navigate('/auth/redirect');
+        });
+    }, []);
 
     const {
         register,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormControl, GridItem, Heading, SlideFade } from '@chakra-ui/react';
 import '../../../index.css';
+import placeholder from '../../../assets/placeholder.jpg';
 
 interface Props {
     callback: Function;
@@ -28,9 +29,6 @@ const ProfilePicture = ({ callback, photoParent }: Props) => {
         callback(file);
     };
 
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
     return (
         <SlideFade
             in={isOpen}
@@ -92,9 +90,7 @@ const ProfilePicture = ({ callback, photoParent }: Props) => {
                                 borderRadius: '25px',
                             }}
                             className={'uploadProfile'}
-                            src={
-                                'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
-                            }
+                            src={placeholder}
                             ref={uploadedImage}
                             alt={'Profile picture'}
                         />

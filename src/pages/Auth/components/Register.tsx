@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Button,
     Input,
@@ -59,9 +59,11 @@ const Register = () => {
         resolver: yupResolver(RegisterSchema),
     });
 
-    getCurrentUserId().then((value) => {
-        if (value) navigate('/');
-    });
+    useEffect(() => {
+        getCurrentUserId().then((value) => {
+            if (value) navigate('/');
+        });
+    }, []);
 
     const onSubmit = async (data: RegisterInfo) => {
         // @ts-ignore

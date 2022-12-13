@@ -72,7 +72,7 @@ export async function getProfile(id?: string | null) {
         .eq('id', id)
         .limit(1);
     if (error) throw error;
-    return data[0] ? data[0] : null;
+    return data[0] || null;
 }
 
 export async function getAvatar(id?: string | null) {

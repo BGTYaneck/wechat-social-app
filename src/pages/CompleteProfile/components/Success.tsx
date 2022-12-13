@@ -25,7 +25,7 @@ const Success = () => {
             </Heading>
             <Text color={'gray.500'}>
                 Your account has been successfully created - click on the button
-                below to be redirected to the homepage!
+                below to start using weChat!
             </Text>
             <Button
                 colorScheme="red"
