@@ -61,7 +61,7 @@ const Register = () => {
 
     useEffect(() => {
         getCurrentUserId().then((value) => {
-            if (value) navigate('/');
+            if (value) navigate('/auth/redirect');
         });
     }, []);
 

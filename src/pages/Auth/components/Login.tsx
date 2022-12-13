@@ -67,6 +67,7 @@ const Login = () => {
     const onSubmit = async (data: LoginInfo) => {
         try {
             await loginWithEmail(data['email'], data['password']);
+            navigate('/auth/redirect');
         } catch (e: any) {
             toast({
                 title: 'Error',

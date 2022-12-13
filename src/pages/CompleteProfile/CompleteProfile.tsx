@@ -9,6 +9,7 @@ import {
     insertProfile,
     uploadAvatar,
 } from '../../supabase/profiles';
+import supabase from '../../supabase/supabase';
 import '../../index.css';
 import { getCurrentUserId } from '../../supabase/auth';
 
@@ -22,7 +23,7 @@ export default function multistep() {
         getCurrentUserId().then((value) => {
             if (!value) navigate('/login');
             getProfile(value).then((value) => {
-                if (value) navigate('/');
+                if (value) navigate('/auth/redirect');
             });
         });
     }, []);
@@ -129,20 +130,49 @@ export default function multistep() {
                                 colorScheme="red"
                                 variant="solid"
                                 onClick={() => {
-                                    console.log(name, surname, desc, photo);
+                                    console.log(
+                                        name,
+                                        surname,
+                                        desc,
+                                        photo,
+                                        getCurrentUserId().then()
+                                    );
                                     insertProfile(`${name} ${surname}`, desc)
                                         .then(() => {
-                                            uploadAvatar(photo)
-                                                .then(() => {
-                                                    navigate(
-                                                        '/complete-profile/success'
-                                                    );
-                                                })
-                                                .catch((reason) => {
-                                                    navigate(
-                                                        `/complete-profile/error?message=${reason.message}`
-                                                    );
-                                                });
+                                            if (photo.size === 0) {
+                                                uploadAvatar(photo)
+                                                    .then(() => {
+                                                        navigate(
+                                                            '/complete-profile/success'
+                                                        );
+                                                    })
+                                                    .catch((reason) => {
+                                                        navigate(
+                                                            `/complete-profile/error?message=${reason.message}`
+                                                        );
+                                                    });
+                                            } else {
+                                                getCurrentUserId().then(
+                                                    (value) => {
+                                                        supabase.storage
+                                                            .from('public')
+                                                            .copy(
+                                                                'avatar/profile/default',
+                                                                `avatar/profile/${value}`
+                                                            )
+                                                            .then(() =>
+                                                                navigate(
+                                                                    '/complete-profile/success'
+                                                                )
+                                                            )
+                                                            .catch((reason) => {
+                                                                navigate(
+                                                                    `/complete-profile/error?message=${reason.message}`
+                                                                );
+                                                            });
+                                                    }
+                                                );
+                                            }
                                         })
                                         .catch((reason) =>
                                             navigate(
