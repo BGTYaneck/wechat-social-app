@@ -9,8 +9,8 @@ import {
     FormLabel,
     Input,
     Textarea,
-    FormHelperText,
     SimpleGrid,
+    Button,
 } from '@chakra-ui/react';
 import placeholder from '../../assets/placeholder.jpg';
 import { BiArrowBack } from 'react-icons/all';
@@ -95,7 +95,7 @@ const EditProfile = () => {
             <SlideFade
                 in={isOpen}
                 offsetY="20px"
-                style={{ marginTop: '6rem' }}
+                style={{ marginTop: '5rem' }}
             >
                 <BiArrowBack
                     style={{
@@ -253,6 +253,20 @@ const EditProfile = () => {
                                     }}
                                 />
                             </FormControl>
+                            <Center>
+                                <Button
+                                    colorScheme="red"
+                                    bgGradient="linear(to-r, red.400, red.500, red.600)"
+                                    color="white"
+                                    variant="solid"
+                                    style={{
+                                        width: '12rem',
+                                    }}
+                                    onClick={() => {}}
+                                >
+                                    Save changes
+                                </Button>
+                            </Center>
                         </SimpleGrid>
                     </div>
                 </FormControl>
