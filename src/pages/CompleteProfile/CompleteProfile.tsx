@@ -130,7 +130,7 @@ export default function multistep() {
                                 variant="solid"
                                 onClick={() => {
                                     console.log(name, surname, desc, photo);
-                                    insertProfile(`${name} ${surname}`, desc)
+                                    insertProfile(name, surname, desc)
                                         .then(() => {
                                             uploadAvatar(photo)
                                                 .then(() => {

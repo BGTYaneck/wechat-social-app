@@ -44,6 +44,7 @@ export async function pinPost(id: string) {
 
 export async function updateProfile(
     name?: string,
+    surname?: string,
     desc?: string,
     status?: string
 ) {
@@ -51,15 +52,24 @@ export async function updateProfile(
         return;
     const { data, error } = await supabase
         .from('profiles')
-        .upsert({ name, description: desc, status })
+        .upsert({ name, surname, description: desc, status })
         .eq('id', await getCurrentUserId());
     if (error) throw error;
 }
 
-export async function insertProfile(name: string, desc: string) {
+export async function insertProfile(
+    name: string,
+    surname: string,
+    desc: string
+) {
     const { data, error } = await supabase
         .from('profiles')
-        .upsert({ id: await getCurrentUserId(), name, description: desc });
+        .upsert({
+            id: await getCurrentUserId(),
+            name,
+            surname,
+            description: desc,
+        });
     if (error) throw error;
 }
 

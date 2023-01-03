@@ -45,7 +45,6 @@ const EditProfile = () => {
             };
             reader.readAsDataURL(file);
         }
-        file;
     };
 
     const [name, setName] = useState('');
@@ -61,9 +60,8 @@ const EditProfile = () => {
     }
     useEffect(() => {
         getProfile(id).then((value: ProfileDataEdit) => {
-            const splitName = value.name.split(' ');
-            setName(splitName[0]);
-            setSurname(splitName[1]);
+            setName(value.name);
+            setSurname(value.surname);
             setDesc(value.description);
         });
         getAvatar().then((value) => {

@@ -12,12 +12,14 @@ import { useNavigate } from 'react-router-dom';
 interface ProfileData {
     id: string;
     name: string;
+    surname: string;
     created_at: string;
     description: string | null;
 }
 
 const UserProfile = () => {
     const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
     const [creationDate, setCreationDate] = useState('');
     const [count, setCount] = useState<number | undefined>(0);
     const [desc, setDesc] = useState<string | null>('');
@@ -32,6 +34,7 @@ const UserProfile = () => {
     useEffect(() => {
         getProfile(id).then((value: ProfileData) => {
             setName(value.name);
+            setSurname(value.surname);
             setCreationDate(value.created_at);
             setDesc(value.description);
         });
@@ -82,7 +85,7 @@ const UserProfile = () => {
                     alignItems: 'center',
                 }}
             >
-                {name}
+                {`${name} ${surname}`}
                 <AiFillEdit
                     style={{
                         width: '15px',
