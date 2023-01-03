@@ -13,9 +13,12 @@ import {
     SimpleGrid,
 } from '@chakra-ui/react';
 import placeholder from '../../assets/placeholder.jpg';
+import { BiArrowBack } from 'react-icons/all';
 import { useParams } from 'react-router-dom';
 import { getCurrentUserId } from '../../supabase/auth';
 import { getAvatar, getProfile } from '../../supabase/profiles';
+import { useNavigate } from 'react-router-dom';
+import '../../index.css';
 
 interface ProfileDataEdit {
     name: string;
@@ -58,8 +61,9 @@ const EditProfile = () => {
     }
     useEffect(() => {
         getProfile(id).then((value: ProfileDataEdit) => {
-            setName(value.name);
-            setSurname(value.name);
+            const splitName = value.name.split(' ');
+            setName(splitName[0]);
+            setSurname(splitName[1]);
             setDesc(value.description);
         });
         getAvatar().then((value) => {
@@ -74,6 +78,7 @@ const EditProfile = () => {
         });
     }, []);
 
+    const navigate = useNavigate();
     return (
         <>
             <Navigation />
@@ -82,6 +87,20 @@ const EditProfile = () => {
                 offsetY="20px"
                 style={{ marginTop: '6rem' }}
             >
+                <BiArrowBack
+                    style={{
+                        width: '3rem',
+                        height: '3rem',
+                        position: 'absolute',
+                        marginLeft: '20px',
+                        cursor: 'pointer',
+                        borderRadius: '50%',
+                    }}
+                    className={'outlineHover'}
+                    onClick={() => {
+                        navigate('/');
+                    }}
+                />
                 <FormControl
                     as={GridItem}
                     colSpan={[6, 3]}
@@ -140,79 +159,89 @@ const EditProfile = () => {
                             300x300
                         </p>
                     </div>
-                    <Center style={{}}>
-                        <FormControl mr="5%">
-                            <FormLabel
-                                htmlFor="first-name"
-                                fontWeight={'normal'}
-                            >
-                                First name
-                            </FormLabel>
-                            <Input
-                                value={name}
-                                style={{ width: '15rem' }}
-                                id="first-name"
-                                placeholder="John"
-                                errorBorderColor="red.500"
-                                focusBorderColor="red.300"
-                            />
-                        </FormControl>
-
-                        <FormControl>
-                            <FormLabel
-                                htmlFor="last-name"
-                                fontWeight={'normal'}
-                            >
-                                Last name
-                            </FormLabel>
-                            <Input
-                                value={surname}
-                                style={{ width: '15rem' }}
-                                id="last-name"
-                                placeholder="Doe"
-                                errorBorderColor="red.500"
-                                focusBorderColor="red.300"
-                            />
-                        </FormControl>
-                    </Center>
-                    <SimpleGrid
-                        columns={1}
-                        spacing={6}
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
                     >
-                        <FormControl
-                            id="email"
-                            mt={1}
+                        <Center style={{ width: '25rem', gap: '1rem' }}>
+                            <FormControl mr="5%">
+                                <FormLabel
+                                    htmlFor="first-name"
+                                    fontWeight={'normal'}
+                                >
+                                    First name
+                                </FormLabel>
+                                <Input
+                                    value={name}
+                                    style={{ width: '11.5rem' }}
+                                    id="first-name"
+                                    placeholder="John"
+                                    errorBorderColor="red.500"
+                                    focusBorderColor="red.300"
+                                />
+                            </FormControl>
+
+                            <FormControl>
+                                <FormLabel
+                                    htmlFor="last-name"
+                                    fontWeight={'normal'}
+                                >
+                                    Last name
+                                </FormLabel>
+                                <Input
+                                    value={surname}
+                                    style={{ width: '11.5rem' }}
+                                    id="last-name"
+                                    placeholder="Doe"
+                                    errorBorderColor="red.500"
+                                    focusBorderColor="red.300"
+                                />
+                            </FormControl>
+                        </Center>
+
+                        <SimpleGrid
+                            columns={1}
+                            spacing={6}
                         >
-                            <FormLabel
-                                fontSize="md"
-                                fontWeight="md"
+                            <FormControl
+                                id="email"
+                                mt={1}
                             >
-                                A brief description of yourself
-                            </FormLabel>
-                            <Textarea
-                                /*@ts-ignore*/
-                                value={desc}
-                                placeholder="I was born to be that true person, not really to be perfect.
+                                <FormLabel
+                                    fontSize="md"
+                                    fontWeight="md"
+                                >
+                                    Your description
+                                </FormLabel>
+                                <Textarea
+                                    /*@ts-ignore*/
+                                    value={desc}
+                                    placeholder="I was born to be that true person, not really to be perfect.
                                      The thoughts of me, which others harbor, is none of my business.
                                      I am so much in love with the confidence that makeup gives to me.
                                      I am just an innocent girl searching for my heart.
                                      Anytime I hear them say that the sky is the limit to me, I think they are actually telling the truth.
                                      I desire to be your best Hello, and most difficult goodbye."
-                                rows={3}
-                                style={{ height: '8rem' }}
-                                shadow="sm"
-                                errorBorderColor="red.500"
-                                focusBorderColor="red.300"
-                                fontSize={{
-                                    sm: 'md',
-                                }}
-                            />
-                            <FormHelperText>
-                                Don't worry! - You can edit all your information
-                                later on!
-                            </FormHelperText>
-                        </FormControl>
-                    </SimpleGrid>
+                                    rows={3}
+                                    style={{
+                                        height: '8rem',
+                                        width: '30rem',
+                                        maxWidth: '25rem',
+                                    }}
+                                    shadow="sm"
+                                    errorBorderColor="red.500"
+                                    focusBorderColor="red.300"
+                                    fontSize={{
+                                        sm: 'md',
+                                    }}
+                                />
+                            </FormControl>
+                        </SimpleGrid>
+                    </div>
                 </FormControl>
             </SlideFade>
         </>
