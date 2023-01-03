@@ -76,6 +76,18 @@ const EditProfile = () => {
         });
     }, []);
 
+    const handleNameChange = (e: any) => {
+        let inputValue = e.target.value;
+        setName(inputValue);
+    };
+    const handleSurnameChange = (e: any) => {
+        let inputValue = e.target.value;
+        setSurname(inputValue);
+    };
+    const handleDescChange = (e: any) => {
+        let inputValue = e.target.value;
+        setDesc(inputValue);
+    };
     const navigate = useNavigate();
     return (
         <>
@@ -175,6 +187,7 @@ const EditProfile = () => {
                                 </FormLabel>
                                 <Input
                                     value={name}
+                                    onChange={handleNameChange}
                                     style={{ width: '11.5rem' }}
                                     id="first-name"
                                     placeholder="John"
@@ -192,6 +205,7 @@ const EditProfile = () => {
                                 </FormLabel>
                                 <Input
                                     value={surname}
+                                    onChange={handleSurnameChange}
                                     style={{ width: '11.5rem' }}
                                     id="last-name"
                                     placeholder="Doe"
@@ -218,6 +232,7 @@ const EditProfile = () => {
                                 <Textarea
                                     /*@ts-ignore*/
                                     value={desc}
+                                    onChange={handleDescChange}
                                     placeholder="I was born to be that true person, not really to be perfect.
                                      The thoughts of me, which others harbor, is none of my business.
                                      I am so much in love with the confidence that makeup gives to me.
